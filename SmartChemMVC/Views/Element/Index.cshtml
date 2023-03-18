@@ -1,0 +1,527 @@
+﻿@model ElementViewModel
+
+
+<html>
+	    <h2>Get Element by ID</h2>
+
+    <div class="row justify-content-center">
+    <form method="post" asp-action="Index">
+        <div class="form-group">
+            <label for="id1" >Select ID:</label>
+            <select class="form-control" id="id1" name="id1">
+          <option value="26">H - Hydrogen</option>
+          <option value="27">He - Helium</option>
+          <option value="28">Li - Lithium</option>
+          <option value="29">Be - Beryllium</option>
+          <option value="30">B - Boron</option>
+          <option value="31">C - Carbon</option>
+          <option value="32">N - Nitrogen</option>
+          <option value="33">O - Oxygen</option>
+          <option value="34">F - Fluorine</option>
+          <option value="35">Ne - Neon</option>
+          <option value="36">Na - Sodium</option>
+          <option value="37">Mg - Magnesium</option>
+          <option value="38">Al - Aluminum</option>
+          <option value="39">Si - Silicon</option>
+          <option value="40">P - Phosphorus</option>
+          <option value="41">S - Sulfur</option>
+          <option value="42">Cl - Chlorine</option>
+          <option value="43">Ar - Argon</option>
+          <option value="44">K - Potassium</option>
+          <option value="45">Ca - Calcium</option>
+          <option value="46">Sc - Scandium</option>
+          <option value="47">Ti - Titanium</option>
+          <option value="48">V - Vanadium</option>
+          <option value="49">Cr - Chromium</option>
+          <option value="50">Mn - Manganese</option>
+          <option value="51">Fe - Iron</option>
+          <option value="52">Co - Cobalt</option>
+          <option value="53">Ni - Nickel</option>
+          <option value="54">Cu - Copper</option>
+          <option value="55">Zn - Zinc</option>
+          <option value="56">Ga - Gallium</option>
+          <option value="57">Ge - Germanium</option>
+          <option value="58">As - Arsenic</option>
+          <option value="59">Se - Selenium</option>
+          <option value="60">Br - Bromine</option>
+          <option value="61">Kr - Krypton</option>
+          <option value="62">Rb - Rubidium</option>
+          <option value="63">Sr - Strontium</option>
+          <option value="64">Y - Yttrium</option>
+          <option value="65">Zr - Zirconium</option>
+          <option value="66">Nb - Niobium</option>
+          <option value="67">Mo - Molybdenum</option>
+          <option value="68">Tc - Technetium</option>
+          <option value="69">Ru - Ruthenium</option>
+          <option value="70">Rh - Rhodium</option>
+          <option value="71">Pd - Palladium</option>
+          <option value="72">Ag - Silver</option>
+          <option value="73">Cadmium</option>
+          <option value="74">Indium</option>
+          <option value="75">Tin</option>
+          <option value="76">Antimony</option>
+          <option value="77">Tellurium</option>
+          <option value="78">Iodine</option>
+          <option value="79">Xenon</option>
+          <option value="80">Cesium</option>
+          <option value="81">Barium</option>
+          <option value="82">Lanthanum</option>
+          <option value="83">Cerium</option>
+          <option value="84">Praseodymium</option>
+          <option value="85">Neodymium</option>
+          <option value="86">Promethium</option>
+          <option value="87">Samarium</option>
+          <option value="88">Europium</option>
+          <option value="89">Gadolinium</option>
+          <option value="90">Terbium</option>
+          <option value="91">Dysprosium</option>
+          <option value="92">Holmium</option>
+          <option value="93">Erbium</option>
+          <option value="94">Thulium</option>
+          <option value="95">Ytterbium</option>
+          <option value="96">Lutetium</option>
+          <option value="97">Hafnium</option>
+          <option value="98">Tantalum</option>
+          <option value="99">Tungsten</option>
+          <option value="100">Rhenium</option>
+          <option value="101">Osmium</option>
+          <option value="102">Iridium</option>
+          <option value="103">Platinum</option>
+          <option value="104">Gold</option>
+          <option value="105">Mercury</option>
+          <option value="106">Thallium</option>
+          <option value="107">Lead</option>
+          <option value="108">Bismuth</option>
+          <option value="109">Polonium</option>
+          <option value="110">Astatine</option>
+          <option value="111">Radon</option>
+          <option value="112">Francium</option>
+          <option value="113">Radium</option>
+          <option value="114">Actinium</option>
+          <option value="115">Thorium</option>
+          <option value="116">Protactinium</option>
+          <option value="117">Uranium</option>
+          <option value="118">Neptunium</option>
+          <option value="119">Plutonium</option>
+          <option value="120">Americium</option>
+          <option value="121">Curium</option>
+          <option value="122">Berkelium</option>
+          <option value="123">Californium</option>
+          <option value="124">Einsteinium</option>
+          <option value="125">Fermium</option>
+          <option value="126">Mendelevium</option>
+          <option value="127">Nobelium</option>
+          <option value="128">Lawrencium</option>
+          <option value="129">Rutherfordium</option>
+          <option value="130">Dubnium</option>
+          <option value="131">Seaborgium</option>
+          <option value="132">Bohrium</option>
+          <option value="133">Hassium</option>
+          <option value="134">Meitnerium</option>
+          <option value="135">Darmstadtium</option>
+          <option value="136">Roentgenium</option>
+          <option value="137">Copernicium</option>
+          <option value="138">Nihonium</option>
+          <option value="139">Flerovium</option>
+          <option value="140">Moscovium</option>
+          <option value="141">Livermorium</option>
+          <option value="142">Tennessine</option>
+          <option value="143">Oganesson</option>
+        </select>
+        </div>
+    @*    <div class="form-group">
+                    <label for="id1">Enter ID:</label>
+                    <input type="text" class="form-control" id="id1" name="id" placeholder="Enter ID" />
+                
+                </div>*@
+
+    @*            <div class="form-group">
+                    <label for="id2">Enter ID:</label>
+                    <input type="text" class="form-control" id2="id2" name="id2" placeholder="Enter ID" />
+                
+                </div>*@
+
+
+                <div class="form-group">
+        <label for="id2">Select ID:</label>
+        <select class="form-control" id="id2" name="id2">
+          <option value="26">H - Hydrogen</option>
+          <option value="27">He - Helium</option>
+          <option value="28">Li - Lithium</option>
+          <option value="29">Be - Beryllium</option>
+          <option value="30">B - Boron</option>
+          <option value="31">C - Carbon</option>
+          <option value="32">N - Nitrogen</option>
+          <option value="33">O - Oxygen</option>
+          <option value="34">F - Fluorine</option>
+          <option value="35">Ne - Neon</option>
+          <option value="36">Na - Sodium</option>
+          <option value="37">Mg - Magnesium</option>
+          <option value="38">Al - Aluminum</option>
+          <option value="39">Si - Silicon</option>
+          <option value="40">P - Phosphorus</option>
+          <option value="41">S - Sulfur</option>
+          <option value="42">Cl - Chlorine</option>
+          <option value="43">Ar - Argon</option>
+          <option value="44">K - Potassium</option>
+          <option value="45">Ca - Calcium</option>
+          <option value="46">Sc - Scandium</option>
+          <option value="47">Ti - Titanium</option>
+          <option value="48">V - Vanadium</option>
+          <option value="49">Cr - Chromium</option>
+          <option value="50">Mn - Manganese</option>
+          <option value="51">Fe - Iron</option>
+          <option value="52">Co - Cobalt</option>
+          <option value="53">Ni - Nickel</option>
+          <option value="54">Cu - Copper</option>
+          <option value="55">Zn - Zinc</option>
+          <option value="56">Ga - Gallium</option>
+          <option value="57">Ge - Germanium</option>
+          <option value="58">As - Arsenic</option>
+          <option value="59">Se - Selenium</option>
+          <option value="60">Br - Bromine</option>
+          <option value="61">Kr - Krypton</option>
+          <option value="62">Rb - Rubidium</option>
+          <option value="63">Sr - Strontium</option>
+          <option value="64">Y - Yttrium</option>
+          <option value="65">Zr - Zirconium</option>
+          <option value="66">Nb - Niobium</option>
+          <option value="67">Mo - Molybdenum</option>
+          <option value="68">Tc - Technetium</option>
+          <option value="69">Ru - Ruthenium</option>
+          <option value="70">Rh - Rhodium</option>
+          <option value="71">Pd - Palladium</option>
+          <option value="72">Ag - Silver</option>
+          <option value="73">Cadmium</option>
+          <option value="74">Indium</option>
+          <option value="75">Tin</option>
+          <option value="76">Antimony</option>
+          <option value="77">Tellurium</option>
+          <option value="78">Iodine</option>
+          <option value="79">Xenon</option>
+          <option value="80">Cesium</option>
+          <option value="81">Barium</option>
+          <option value="82">Lanthanum</option>
+          <option value="83">Cerium</option>
+          <option value="84">Praseodymium</option>
+          <option value="85">Neodymium</option>
+          <option value="86">Promethium</option>
+          <option value="87">Samarium</option>
+          <option value="88">Europium</option>
+          <option value="89">Gadolinium</option>
+          <option value="90">Terbium</option>
+          <option value="91">Dysprosium</option>
+          <option value="92">Holmium</option>
+          <option value="93">Erbium</option>
+          <option value="94">Thulium</option>
+          <option value="95">Ytterbium</option>
+          <option value="96">Lutetium</option>
+          <option value="97">Hafnium</option>
+          <option value="98">Tantalum</option>
+          <option value="99">Tungsten</option>
+          <option value="100">Rhenium</option>
+          <option value="101">Osmium</option>
+          <option value="102">Iridium</option>
+          <option value="103">Platinum</option>
+          <option value="104">Gold</option>
+          <option value="105">Mercury</option>
+          <option value="106">Thallium</option>
+          <option value="107">Lead</option>
+          <option value="108">Bismuth</option>
+          <option value="109">Polonium</option>
+          <option value="110">Astatine</option>
+          <option value="111">Radon</option>
+          <option value="112">Francium</option>
+          <option value="113">Radium</option>
+          <option value="114">Actinium</option>
+          <option value="115">Thorium</option>
+          <option value="116">Protactinium</option>
+          <option value="117">Uranium</option>
+          <option value="118">Neptunium</option>
+          <option value="119">Plutonium</option>
+          <option value="120">Americium</option>
+          <option value="121">Curium</option>
+          <option value="122">Berkelium</option>
+          <option value="123">Californium</option>
+          <option value="124">Einsteinium</option>
+          <option value="125">Fermium</option>
+          <option value="126">Mendelevium</option>
+          <option value="127">Nobelium</option>
+          <option value="128">Lawrencium</option>
+          <option value="129">Rutherfordium</option>
+          <option value="130">Dubnium</option>
+          <option value="131">Seaborgium</option>
+          <option value="132">Bohrium</option>
+          <option value="133">Hassium</option>
+          <option value="134">Meitnerium</option>
+          <option value="135">Darmstadtium</option>
+          <option value="136">Roentgenium</option>
+          <option value="137">Copernicium</option>
+          <option value="138">Nihonium</option>
+          <option value="139">Flerovium</option>
+          <option value="140">Moscovium</option>
+          <option value="141">Livermorium</option>
+          <option value="142">Tennessine</option>
+          <option value="143">Oganesson</option>
+        </select>
+      </div>
+
+                <div class="col-md-12">
+                <button type="submit" class="btn btn-primary">Get Element</button>
+            </div>
+    </form>
+    </div>
+
+
+    @if (Model != null)
+    {
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-6">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Atomic Number</th>
+                            <th>ElementName</th>
+                            <th>Id</th>
+                            <th>AtomicMass</th>
+                            <th>Valence</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>@Model.FirstElement.Name</td>
+                            <td>@Model.FirstElement.AtomicNumber</td>
+                            <td>@Model.FirstElement.ElementName</td>
+                            <td>@Model.FirstElement.Id</td>
+                            <td>@Model.FirstElement.AtomicMass</td>
+                            <td>@Model.FirstElement.Valence</td>
+                        
+                        </tr>
+                        <tr>
+                            <td>@Model.SecondElement.Name</td>
+                            <td>@Model.SecondElement.AtomicNumber</td>
+                            <td>@Model.SecondElement.ElementName</td>
+                            <td>@Model.SecondElement.Id</td>
+                            <td>@Model.SecondElement.AtomicMass</td>
+                             <td>@Model.SecondElement.Valence</td>
+                        
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+
+    <body/>
+	    <div class="chem-formula">
+            @if(Model.FirstElement.Valence == 0 || Model.SecondElement.Valence == 0){ @Html.Partial("_NobleGases") }else{
+            @Model.FirstElement.ElementName
+            <sub>@if(Model.FirstElement.Valence != 0 && Model.FirstElement.Valence != 1){ @Model.FirstElement.Valence }</sub> 
+            <div>+</div>
+            @Model.SecondElement.ElementName
+            <sub>@if(Model.SecondElement.Valence != 0 && Model.SecondElement.Valence != 1){ @Model.SecondElement.Valence }</sub>
+
+
+		    <div class="arrow">&rarr;</div>
+
+
+            @Model.FirstElement.ElementName
+                <sub>@if(Model.SecondElement.Valence != 0 && Model.SecondElement.Valence != 1){ @Model.SecondElement.Valence }</sub>
+                @Model.SecondElement.ElementName
+                <sub>@if(Model.FirstElement.Valence != 0 && Model.FirstElement.Valence != 1){ @Model.FirstElement.Valence }</sub>
+            }
+
+
+
+        </div>
+
+
+    <div class="mass-label">Mass of Each Element:</div>
+    <div class="mass-values">Mass of first element: <span class="atomic-mass">@Model.FirstElement.AtomicMass</span>Grams</div>
+    <div class="mass-values">Mass of second element: <span class="atomic-mass">@Model.SecondElement.AtomicMass</span>Grams</div>
+
+        float? mass1 = Model.FirstElement.AtomicMass * Model.FirstElement.Valence;
+        float? mass2 = Model.SecondElement.AtomicMass * Model.SecondElement.Valence;
+        float? massSum = mass1 + mass2;
+
+    <div class="mass-values"> Mass of both elements: <span class="total-mass"> @massSum </span> Grams  </div>
+    <style>
+        .mass-label {
+            font-weight: bold;
+        }
+
+        .mass-values {
+            margin-top: 5px;
+        }
+
+        .atomic-mass {
+            font-weight: bold;
+        }
+
+        .total-mass {
+            font-weight: bold;
+            color: blue;
+        }
+    </style>
+
+
+}
+
+
+</html>
+
+<style>
+		.chem-formula {
+			align-items: center;
+			font-family: Arial, sans-serif;
+			font-size: 1.5rem;
+			display: flex;
+			flex-direction: row;
+			justify-content: center;
+			align-items: center;
+			border: 2px solid black;
+			padding: 1rem;
+			border-radius: 5px;
+		}
+
+		.chem-formula sub {
+			font-size: 0.8rem;
+			vertical-align: sub;
+			margin-left: 0.2rem;
+		}
+
+		.arrow {
+			font-size: 2rem;
+			margin: 0 1.5rem;
+		}
+
+		.container {
+			display: flex;
+		}
+
+		/* Center form horizontally */
+		.form-group {
+			margin-left: auto;
+			margin-right: auto;
+		}
+
+		/* Add space below form */
+		.form-group + button {
+			margin-top: 1rem;
+		}
+
+		/* Add space between form and table */
+		form + .table {
+			margin-top: 2rem;
+		}
+
+		/* Style table */
+		.table {
+			border-collapse: separate;
+			border-spacing: 0 0.5rem;
+		}
+
+		.table th {
+			background-color: #007bff;
+			color: #fff;
+			font-weight: 500;
+			text-align: center;
+			vertical-align: middle;
+			padding: 0.75rem;
+			border-top: 2px solid #dee2e6;
+		}
+
+		.table td {
+			text-align: center;
+			vertical-align: middle;
+			padding: 0.75rem;
+			border-top: 1px solid #dee2e6;
+		}
+
+		.table-striped tbody tr:nth-of-type(odd) {
+			background-color: rgba(0, 0, 0, 0.05);
+		}
+	</style>
+
+@*
+<style>
+   .chem-formula {
+       align-items: center;
+  font-family: Arial, sans-serif;
+  font-size: 1.5rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid black;
+  padding: 1rem;
+  border-radius: 5px;
+}
+
+.chem-formula sub {
+  font-size: 0.8rem;
+  vertical-align: sub;
+  margin-left: 0.2rem;
+}
+
+.arrow {
+  font-size: 2rem;
+  margin: 0 1.5rem;
+}
+
+
+
+    .container{
+        display : flex;
+
+    }
+    /* Center form horizontally */
+.form-group {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Add space below form */
+.form-group + button {
+    margin-top: 1rem;
+}
+
+/* Add space between form and table */
+form + .table {
+    margin-top: 2rem;
+}
+
+/* Style table */
+.table {
+    border-collapse: separate;
+    border-spacing: 0 0.5rem;
+}
+
+.table th {
+    background-color: #007bff;
+    color: #fff;
+    font-weight: 500;
+    text-align: center;
+    vertical-align: middle;
+    padding: 0.75rem;
+    border-top: 2px solid #dee2e6;
+}
+
+.table td {
+    text-align: center;
+    vertical-align: middle;
+    padding: 0.75rem;
+    border-top: 1px solid #dee2e6;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+
+
+
+</style>
+           *@             

@@ -1,0 +1,56 @@
+﻿
+@*<h1>Error @Model</h1>*@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Error Page @Model</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+        }
+        .error-container {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 50px;
+            margin-top: 50px;
+            border-radius: 5px;
+        }
+        h1 {
+            font-size: 36px;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        p {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        button {
+            padding: 15px 30px;
+            font-size: 18px;
+            border-radius: 30px;
+            border: none;
+            color: #fff;
+            background-color: #3498db;
+            transition: all 0.2s ease-in-out;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <h1>Error Page @Model</h1>
+        <h1>Oops! Something went wrong</h1>
+        <p>We're sorry, but it looks like an error occurred. Please try again later.</p>
+        <button onclick="window.history.back()">Go Back</button>
+    </div>
+</body>
+</html>

@@ -16,9 +16,9 @@ namespace SmartChem.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     AtomicNumber = table.Column<int>(type: "int", nullable: false),
-                    AtomicMass = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AtomicMass = table.Column<float>(type: "float", nullable: false),
                     ElementName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Valence = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Valence = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {

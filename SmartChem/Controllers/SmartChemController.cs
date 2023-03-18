@@ -15,11 +15,25 @@ namespace SmartChem.Controllers
         {
             _context = context;
         }
-        [HttpGet]
-        public async Task<ActionResult<List<Element>>> GetElement()
-        {
-            return Ok(await _context.Elements.ToListAsync());
+        //[HttpGet]
+        //public async Task<ActionResult<List<Element>>> GetElement()
+        //{
+        //    return Ok(await _context.Elements.ToListAsync());
 
+        //}
+
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Element>> GetElement(int id)
+        {
+            var element = await _context.Elements.FindAsync(id);
+
+            if (element == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(element);
         }
     }
 }

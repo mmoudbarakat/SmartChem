@@ -8,3 +8,4 @@ namespace SmartChem.Data
         public DbSet<Element> Elements => Set<Element>();
     }
 }
+//dotnet ef dbcontext scaffold "Data Source=.;Initial Catalog=Elements;Integrated Security=True" Microsoft.EntityFrameworkCore.SqlServer -o Models -c DataContextModelSnapshot --context-dir Migrations --no-onconfiguring --force
