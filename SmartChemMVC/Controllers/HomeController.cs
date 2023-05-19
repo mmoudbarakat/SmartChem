@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using SmartChemMVC.Models;
 using System.Diagnostics;
+using System.Net.Http;
 
 
 namespace SmartChemMVC.Controllers
@@ -10,13 +11,18 @@ namespace SmartChemMVC.Controllers
     
     public class HomeController : Controller
     {
-
+        private readonly HttpClient httpClient;
         //private readonly ILogger<HomeController> _logger;
 
         //public HomeController(ILogger<HomeController> logger)
         //{
         //    _logger = logger;
         //}
+
+        public HomeController(HttpClient httpClient)
+        {
+            this.httpClient = httpClient;
+        }
         [Authorize]
         public async Task<IActionResult> Index()
         {
@@ -30,6 +36,12 @@ namespace SmartChemMVC.Controllers
         public IActionResult Privacy()
         {
             
+            return View();
+        }
+
+        public IActionResult ConstantsList()
+        {
+
             return View();
         }
 

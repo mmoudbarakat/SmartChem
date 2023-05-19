@@ -1,0 +1,60 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Constants in Chemistry and Physics</title>
+    <script>
+        function showConstant() {
+            var constant = document.getElementById("constantsList").value;
+            var constantValue;
+            switch (constant) {
+                case 'Avogadro constant':
+                    constantValue = 6.02214076e23;
+                    break;
+                case 'Boltzmann constant':
+                    constantValue = 1.380649e-23;
+                    break;
+                case "Planck's constant":
+                    constantValue = 6.62607015e-34;
+                    break;
+                case 'Speed of light':
+                    constantValue = 299792458;
+                    break;
+                case 'Elementary charge':
+                    constantValue = 1.602176634e-19;
+                    break;
+                case 'Coulomb constant':
+                    constantValue = 8.9875517923e9;
+                    break;
+                case 'Magnetic constant':
+                    constantValue = 1.25663706212e-6;
+                    break;
+                case 'Faraday constant':
+                    constantValue = 96485.33212;
+                    break;
+                case 'Rydberg constant':
+                    constantValue = 10973731.56816;
+                    break;
+                default:
+                    constantValue = 'Unknown';
+                    break;
+            }
+            document.getElementById('constant-value').innerHTML = constantValue;
+        }
+    </script>
+</head>
+<body >
+    <h1>Constants in Chemistry and Physics</h1>
+    <select id="constantsList" onchange="showConstant()">
+        <option value="Avogadro constant">Avogadro constant</option>
+        <option value="Boltzmann constant">Boltzmann constant</option>
+        <option value="Planck's constant">Planck's constant</option>
+        <option value="Speed of light">Speed of light</option>
+        <option value="Elementary charge">Elementary charge</option>
+        <option value="Coulomb constant">Coulomb constant</option>
+        <option value="Magnetic constant">Magnetic constant</option>
+        <option value="Faraday constant">Faraday constant</option>
+        <option value="Rydberg constant">Rydberg constant</option>
+    </select>
+    <p>Selected constant value: <span id="constant-value"></span></p>
+</body>
+</html>

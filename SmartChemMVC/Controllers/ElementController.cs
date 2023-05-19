@@ -10,11 +10,11 @@ namespace SmartChemMVC.Controllers
 {
     public class ElementController : Controller
     {
-        
-        
+
+
         //public  IActionResult Index()
         //{
-            
+
 
         //        return View();
         //}
@@ -52,7 +52,7 @@ namespace SmartChemMVC.Controllers
         public async Task<IActionResult> GetElementAsync(int id)
         {
             // Make HTTP GET request to API endpoint
-            
+
             HttpResponseMessage response = await httpClient.GetAsync($"https://localhost:7173/api/SmartChem/{id}");
 
             // Throw exception if response is not successful
@@ -113,13 +113,51 @@ namespace SmartChemMVC.Controllers
 
 
 
+        //Get Element by name
+
+        [HttpGet]
+        public IActionResult FindElement()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> FindElement(string name)
+        {
+            // Make HTTP GET request to the API endpoint
+            HttpResponseMessage response = await httpClient.GetAsync($"https://localhost:7173/api/SmartChem/{name}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                // Read response content as string
+                string responseContent = await response.Content.ReadAsStringAsync();
+
+                // Deserialize JSON data into an Element object
+                Element element = JsonConvert.DeserializeObject<Element>(responseContent);
+
+                // Create a view model with required properties
+                var viewModel = new Element
+                {
+                    Name = element.Name,
+                    Valence = element.Valence,
+                    AtomicMass = element.AtomicMass
+                };
+
+                return View("FindElement", viewModel);
+            }
+            else
+            {
+                // Handle error response
+                return View("Error");
+            }
+
+        }
+
+
+
+
+
+
 
     }
-
-
-
-
-
-
-
 }

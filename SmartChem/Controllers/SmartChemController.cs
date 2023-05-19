@@ -23,7 +23,8 @@ namespace SmartChem.Controllers
         //}
 
 
-        [HttpGet("{id}")]
+        //[HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public async Task<ActionResult<Element>> GetElement(int id)
         {
             var element = await _context.Elements.FindAsync(id);
@@ -35,5 +36,20 @@ namespace SmartChem.Controllers
 
             return Ok(element);
         }
+
+
+        [HttpGet("{name}")]
+        public async Task<ActionResult<Element>> GetElementByName(string name)
+        {
+            var element = await _context.Elements.FirstOrDefaultAsync(e => e.Name == name);
+
+            if (element == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(element);
+        }
+
     }
 }

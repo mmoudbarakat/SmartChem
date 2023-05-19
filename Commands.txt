@@ -1,2 +1,6 @@
-dotnet ef database update
-dotnet ef migrations add initial
+
+1) dotnet ef migrations add initial
+2) dotnet ef database update
+3)   "ConnectionStrings": {
+    "DefaultConnection": "Server=.;database=OgraDB;trusted_connection=true; TrustServerCertificate=True"
+  },
