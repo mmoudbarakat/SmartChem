@@ -1,0 +1,143 @@
+﻿@*@{
+    ViewData["Title"] = "Third Party API";
+}
+
+<h1>Third Party API</h1>
+
+<form method="post" asp-action="Index">
+    <div class="form-group">
+        <label for="element1">Element 1:</label>
+        <input type="text" class="form-control" id="element1" name="element1" required>
+    </div>
+    <div class="form-group">
+        <label for="element2">Element 2:</label>
+        <input type="text" class="form-control" id="element2" name="element2" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger">
+        @ViewBag.Error
+    </div>
+}
+else if (ViewBag.Solution != null)
+{
+    <div class="alert alert-success">
+        @ViewBag.Solution
+    </div>
+
+    <img src="@ViewBag.CompoundImageUrl" alt="Compound Image" class="compound-image">
+}
+
+*@
+
+
+
+
+
+
+
+
+
+@{
+    ViewData["Title"] = "Third Party API";
+}
+
+<h1>Third Party API</h1>
+
+<form method="post" asp-action="Index">
+    <div class="form-group">
+        <label for="element1">Element 1:</label>
+        <input type="text" class="form-control" id="element1" name="element1" required>
+    </div>
+    <div class="form-group">
+        <label for="element2">Element 2:</label>
+        <input type="text" class="form-control" id="element2" name="element2" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger">
+        @ViewBag.Error
+    </div>
+}
+else if (ViewBag.Solution != null)
+{
+    //
+    <div class="alert alert-success">
+        @PrintSolutionUntilFirstItem(ViewBag.Solution)
+    </div>
+    //
+
+    <div class="alert alert-success">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>@ViewBag.Element1</th>
+                    <th>@ViewBag.Element2</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var property in new List<string> { "molar mass", "phase", "melting point", "boiling point", "mass density", "surface tension", "dynamic viscosity", "odor" })
+                {
+                    <tr>
+                        <td>@property</td>
+                        <td>@FindPropertyValue(ViewBag.Solution, property, 0)</td>
+                        <td>@FindPropertyValue(ViewBag.Solution, property, 1)</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <img src="@ViewBag.CompoundImageUrl" alt="Compound Image" class="compound-image">
+}
+
+@functions {
+    //
+    public string PrintSolutionUntilFirstItem(string solution)
+    {
+        string[] keywords = { "molar mass", "phase", "melting point", "boiling point", "mass density", "surface tension", "dynamic viscosity", "odor" };
+
+        int firstIndex = solution.Length;
+
+        foreach (string keyword in keywords)
+        {
+            int index = solution.IndexOf(keyword, StringComparison.OrdinalIgnoreCase);
+            if (index != -1 && index < firstIndex)
+            {
+                firstIndex = index;
+            }
+        }
+
+        if (firstIndex != solution.Length)
+        {
+            return solution.Substring(0, firstIndex);
+        }
+
+        return solution;
+    }
+    //
+    public string FindPropertyValue(string solution, string property, int elementIndex)
+    {
+        var lines = solution.Split('\n');
+
+        foreach (var line in lines)
+        {
+            if (line.StartsWith(property))
+            {
+                var values = line.Split('|');
+                if (values.Length > elementIndex + 1)
+                {
+                    return values[elementIndex + 1].Trim();
+                }
+            }
+        }
+
+        return "";
+    }
+}
