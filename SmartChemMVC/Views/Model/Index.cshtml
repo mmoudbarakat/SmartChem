@@ -1,1 +1,9 @@
-﻿hello from model
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome To Our AI Model That Can Help You Study Faster</h1>
+    <a href="@Url.Action("GetCompoundData", "Model")" class="btn btn-primary">Get Compound</a>
+    <a href="@Url.Action("PostReactions", "Model")" class="btn btn-primary">Post Reactions</a>
+</div>

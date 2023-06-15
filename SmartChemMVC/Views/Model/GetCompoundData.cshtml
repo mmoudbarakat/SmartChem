@@ -1,0 +1,32 @@
+﻿@*@model CompoundData
+
+<h1>Compound Data</h1>
+
+@foreach (var property in typeof(CompoundData).GetProperties())
+{
+    <p><strong>@property.Name:</strong> @property.GetValue(Model)</p>
+}
+
+
+*@
+
+@model CompoundData
+
+<h1>Get Compound Data</h1>
+
+<form method="get" action="@Url.Action("GetCompoundData", "Model")">
+    <label for="compoundName">Compound Name:</label>
+    <input type="text" id="compoundName" name="compoundName" />
+
+    <button type="submit">Get Data</button>
+</form>
+
+@if (Model != null)
+{
+    <h2>Compound Data</h2>
+
+    @foreach (var property in typeof(CompoundData).GetProperties())
+    {
+        <p><strong>@property.Name:</strong> @property.GetValue(Model)</p>
+    }
+}
