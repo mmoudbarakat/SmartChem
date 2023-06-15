@@ -94,6 +94,104 @@ namespace SmartChemMVC.Controllers
             }
         }
 
+
+
+
+
+        ///////////////////////
+        public IActionResult DrawMolecule()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SubmitDrawRequest(string mf)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                var requestBody = new { mf };
+                var jsonContent = JsonConvert.SerializeObject(requestBody);
+                var request = new HttpRequestMessage(HttpMethod.Post, "https://chemgeek.live/draw")
+                {
+                    Content = new StringContent(jsonContent, Encoding.UTF8, "application/json")
+                };
+
+                HttpResponseMessage response = await client.SendAsync(request);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    byte[] imageBytes = await response.Content.ReadAsByteArrayAsync();
+                    string base64Image = Convert.ToBase64String(imageBytes);
+                    var imageResult = new ImageResultViewModel { ImageUrl = $"data:image/png;base64,{base64Image}" };
+                    return View("DrawMolecule", imageResult);
+                }
+                else
+                {
+                    return View("Error");
+                }
+            }
+        }
+
+
+
+        /////////////////////////////
+        public IActionResult PostRetrosyntheses()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SubmitRetrosyntheses(RetrosynthesisRequest model)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                var jsonContent = JsonConvert.SerializeObject(model);
+                var request = new HttpRequestMessage(HttpMethod.Post, "https://chemgeek.live/retrosyntheses")
+                {
+                    Content = new StringContent(jsonContent, Encoding.UTF8, "application/json")
+                };
+
+                HttpResponseMessage response = await client.SendAsync(request);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseBody = await response.Content.ReadAsStringAsync();
+                    var retrosynthesisResult = JsonConvert.DeserializeObject<RetrosynthesisResult>(responseBody);
+                    return View("RetrosynthesisResult", retrosynthesisResult);
+                }
+                else
+                {
+                    return View("Error");
+                }
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         //[HttpPost]
         //public async Task<IActionResult> SubmitReactions(string precursors)
         //{

@@ -1,0 +1,13 @@
+﻿@model RetrosynthesisRequest
+
+<h1>Post Retrosyntheses</h1>
+
+<form method="post" action="@Url.Action("SubmitRetrosyntheses", "Model")">
+    <label for="compound">Compound:</label>
+    <input type="text" id="compound" name="compound" />
+
+    <label for="maxPathsNum">Max Paths Number:</label>
+    <input type="number" id="maxPathsNum" name="maxPathsNum" />
+
+    <button type="submit">Submit</button>
+</form>

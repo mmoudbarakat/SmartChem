@@ -1,0 +1,17 @@
+﻿@model ImageResultViewModel
+
+<h1>Post Reactions</h1>
+
+@if (Model != null)
+{
+    <h2>Image Result</h2>
+    <p><strong>Response Image:</strong></p>
+    <img src="@Model.ImageUrl" alt="Response Image" />
+}
+
+<form method="post" action="@Url.Action("SubmitDrawRequest", "Model")">
+    <label for="mf">Molecular Formula:</label>
+    <input type="text" id="mf" name="mf" />
+
+    <button type="submit">Submit</button>
+</form>

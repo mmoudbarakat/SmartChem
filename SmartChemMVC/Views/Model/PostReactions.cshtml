@@ -1,6 +1,17 @@
 ﻿@model ReactionsResultViewModel
 
+
+
 <h1>Post Reactions</h1>
+<form method="post" action="@Url.Action("SubmitReactions", "Model")">
+    <label for="precursors">Precursors:</label>
+    <input type="text" id="precursors" name="precursors" />
+
+    <button type="submit">Submit</button>
+</form>
+
+
+
 
 @if (Model != null)
 {
@@ -9,18 +20,15 @@
     <h1>Results Smiles: @Model.Results_Smiles</h1>
     <h1>Results Confidence: @Model.Confidence</h1>
     <img src="https://chemgeek.live/image/@Model.Img" />
-    @foreach (var property in typeof(ReactionsResultViewModel).GetProperties())
+
+
+@*    @foreach (var property in typeof(ReactionsResultViewModel).GetProperties())
     {
         <p><strong>@property.Name:</strong> @property.GetValue(Model)</p>
-    }
+    }*@
 }
 
-<form method="post" action="@Url.Action("SubmitReactions", "Model")">
-    <label for="precursors">Precursors:</label>
-    <input type="text" id="precursors" name="precursors" />
 
-    <button type="submit">Submit</button>
-</form>
 
 
 
