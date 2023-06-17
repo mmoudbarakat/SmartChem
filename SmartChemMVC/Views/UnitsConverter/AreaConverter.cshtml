@@ -1,0 +1,29 @@
+﻿@*@model decimal
+
+<h1>Area Converter</h1>
+
+@if (ViewBag.ConvertedValue != null)
+{
+    <h3>Converted Value:</h3>
+    <p>@ViewBag.ConvertedValue</p>
+}
+
+<form method="post" action="">
+    <label for="quantity">Quantity:</label>
+    <input type="number" id="quantity" name="quantity" step="any" required />
+
+    <label for="fromUnit">From Unit:</label>
+    <select id="fromUnit" name="fromUnit" required>
+        <option value="km²">Square Kilometers (km²)</option>
+    </select>
+
+    <label for="toUnit">To Unit:</label>
+    <select id="toUnit" name="toUnit" required>
+        <option value="m²">Square Meters (m²)</option>
+        <option value="ha">Hectares (ha)</option>
+        <option value="km²">Square Kilometers (km²)</option>
+    </select>
+
+    <button type="submit">Convert</button>
+</form>
+*@

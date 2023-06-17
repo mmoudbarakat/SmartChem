@@ -1,0 +1,4571 @@
+﻿@*<div class="text-center">
+    <h1 class="display-4">Welcome To Unit Converter</h1>
+    <a href="@Url.Action("SpeedConverter", "UnitsConverter")" class="btn btn-primary">Convert Speed</a>
+    <a href="@Url.Action("AreaConverter", "UnitsConverter")" class="btn btn-primary">Convert Area</a>
+    <a href="@Url.Action("SpeedConverter", "UnitsConverter")" class="btn btn-primary">Convert Data Transfer Rate</a>
+    <a href="@Url.Action("SpeedConverter", "UnitsConverter")" class="btn btn-primary">Convert Energy</a>
+    <a href="@Url.Action("SpeedConverter", "UnitsConverter")" class="btn btn-primary">Convert Frequency </a>
+    <a href="@Url.Action("SpeedConverter", "UnitsConverter")" class="btn btn-primary">Convert Length </a>
+    <a href="@Url.Action("SpeedConverter", "UnitsConverter")" class="btn btn-primary">Convert Mass </a>
+    <a href="@Url.Action("SpeedConverter", "UnitsConverter")" class="btn btn-primary">Convert Angle </a>
+    <a href="@Url.Action("SpeedConverter", "UnitsConverter")" class="btn btn-primary">Convert Pressure </a>
+    <a href="@Url.Action("SpeedConverter", "UnitsConverter")" class="btn btn-primary">Convert Temprature </a>
+    <a href="@Url.Action("SpeedConverter", "UnitsConverter")" class="btn btn-primary">Convert Time </a>
+    <a href="@Url.Action("SpeedConverter", "UnitsConverter")" class="btn btn-primary">Convert Volume</a>
+</div>
+*@
+
+
+@model decimal
+
+<h1>Unit Converter</h1>
+
+<form method="post" action="/UnitsConverter/Convert">
+    <div class="vk_c card obcontainer card-section">
+        <div class="sc5Lhd">
+            <select id="categorySelect" name="category" class="rYVYn LNn04b gsrt" onchange="updateUnits()">
+                <option value="Area">Area</option>
+                <option value="DataTransferRate">Data Transfer Rate</option>
+                <option value="DigitalStorage">Digital Storage</option>
+                <option value="Energy">Energy</option>
+                <option value="Frequency">Frequency</option>
+                <option value="FuelEconomy">Fuel Economy</option>
+                <option value="Length" selected>Length</option>
+                <option value="Mass">Mass</option>
+                <option value="PlaneAngle">Plane Angle</option>
+                <option value="Pressure">Pressure</option>
+                <option value="Speed">Speed</option>
+                <option value="Temperature">Temperature</option>
+                <option value="Time">Time</option>
+                <option value="Volume">Volume</option>
+            </select>
+        </div>
+        <div class="rpnBye" id="inputDiv">
+            <input type="number" id="inputValue" name="quantity" step="any" value="1" class="vXQmIe gsrt" onchange="updateResult()">
+            <select id="inputUnitSelect" name="fromUnit" class="OR9QXc LNn04b gsrt" onchange="updateResult()">
+            </select>
+        </div>
+        <div class="jCkZnd">=</div>
+        <div class="rpnBye" id="outputDiv">
+            <input type="text" id="outputValue" readonly class="vXQmIe gsrt">
+            <select id="outputUnitSelect" name="toUnit" class="OR9QXc LNn04b gsrt" onchange="updateResult()">
+            </select>
+        </div>
+        <div class="dtp2jf">
+            <table>
+                <tbody>
+                    <tr valign="top">
+                        <td>
+                            <div class="NIzGle" id="formulaDiv">Formula</div>
+                        </td>
+                        <td>
+                            <div class="bjhkR" id="formulaValueDiv"></div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+@*    <button type="submit">Convert</button>*@
+</form>
+
+@section scripts {
+    <script>
+        var unitsData = {
+            ////
+            Area: {
+                units: ["Square Kilometre", "Square Meter", "Square Centimeter", "Square Millimeter", "Hectare", "Acre", "Square Mile", "Square Yard", "Square Foot", "Square Inch"]
+            },
+            ////
+            DataTransferRate: {
+                units: ["Bit per Second", "Byte per Second", "Kilobit per Second", "Kilobyte per Second", "Megabit per Second", "Megabyte per Second", "Gigabit per Second", "Gigabyte per Second", "Terabit per Second", "Terabyte per Second", "Petabit per Second", "Petabyte per Second"]
+            },
+            ////
+            DigitalStorage: {
+                units: ["Bit", "Byte", "Kilobit", "Kilobyte", "Megabit", "Megabyte", "Gigabit", "Gigabyte", "Terabit", "Terabyte", "Petabit", "Petabyte"]
+            },
+            //
+            Energy: {
+                units: ["Joule", "Kilojoule", "Calorie", "Kilocalorie", "Electron Volt", "Foot-Pound", "British Thermal Unit", "Therm", "Watt-Hour", "Kilowatt-Hour", "Megawatt-Hour", "Gigawatt-Hour"]
+            },
+            //
+            Frequency: {
+                units: ["Hertz", "Kilohertz", "Megahertz", "Gigahertz", "Terahertz", "Revolutions per Minute", "Revolutions per Second", "Radians per Second"]
+            },
+            FuelEconomy: {
+                units: ["Miles per Gallon (US)", "Miles per Gallon (UK)", "Kilometers per Liter", "Liters per 100 Kilometers"]
+            },
+            ////
+            Length: {
+                units: ["Kilometer", "Meter", "Centimeter", "Millimeter", "Micrometer", "Nanometer", "Mile", "Yard", "Foot", "Inch", "Nautical Mile"]
+            },
+            Mass: {
+                units: ["Tonne", "Kilogram", "Gram", "Milligram", "Microgram", "Imperial Ton", "US Ton", "Stone", "Pound", "Ounce"]
+            },
+            PlaneAngle: {
+                units: ["Degree", "Radian", "Grad", "Minute of Arc", "Second of Arc", "Milliradian"]
+            },
+            Pressure: {
+                units: ["Pascal", "Kilopascal", "Megapascal", "Bar", "Millibar", "Pound per Square Inch (psi)", "KSI", "Atmosphere", "Technical Atmosphere", "Millimeter of Mercury (Torr)", "Centimeter of Water", "Inch of Water"]
+            },
+            Speed: {
+                units: ["Meter per Second", "Kilometer per Hour", "Mile per Hour", "Knot", "Foot per Second"]
+            },
+            Temperature: {
+                units: ["Celsius", "Fahrenheit", "Kelvin"]
+            },
+            Time: {
+                units: ["Nanosecond", "Microsecond", "Millisecond", "Second", "Minute", "Hour", "Day", "Week", "Month", "Year"]
+            },
+            Volume: {
+                units: ["Cubic Meter", "Cubic Kilometer", "Cubic Centimeter", "Cubic Millimeter", "Liter", "Milliliter", "US Gallon", "US Quart", "US Pint", "US Cup", "US Fluid Ounce", "US Tablespoon", "US Teaspoon", "Cubic Foot", "Cubic Inch"]
+            }
+        };
+
+        function updateUnits() {
+            var categorySelect = document.getElementById("categorySelect");
+            var selectedCategory = categorySelect.options[categorySelect.selectedIndex].value;
+
+            var inputUnitSelect = document.getElementById("inputUnitSelect");
+            var outputUnitSelect = document.getElementById("outputUnitSelect");
+
+            var units = unitsData[selectedCategory].units;
+
+            inputUnitSelect.innerHTML = "";
+            outputUnitSelect.innerHTML = "";
+
+            for (var i = 0; i < units.length; i++) {
+                var option = document.createElement("option");
+                option.text = units[i];
+                inputUnitSelect.add(option);
+
+                var outputOption = document.createElement("option");
+                outputOption.text = units[i];
+                outputUnitSelect.add(outputOption);
+            }
+
+            updateResult();
+        }
+
+        function updateResult() {
+            var inputValue = document.getElementById("inputValue").value;
+            var inputUnitSelect = document.getElementById("inputUnitSelect");
+            var selectedInputUnit = inputUnitSelect.options[inputUnitSelect.selectedIndex].text;
+
+            var outputValue = document.getElementById("outputValue");
+            var outputUnitSelect = document.getElementById("outputUnitSelect");
+            var selectedOutputUnit = outputUnitSelect.options[outputUnitSelect.selectedIndex].text;
+
+            var formulaDiv = document.getElementById("formulaDiv");
+            var formulaValueDiv = document.getElementById("formulaValueDiv");
+
+            var formula = `Multiply the ${selectedInputUnit} value by conversion factor`;
+            var conversionFactor = 1;
+
+            switch (selectedInputUnit) {
+                //Length
+                case "Kilometer":
+                    switch (selectedOutputUnit) {
+                        case "Meter":
+                            conversionFactor = 1000;
+                            break;
+                        case "Centimeter":
+                            conversionFactor = 100000;
+                            break;
+                        case "Millimeter":
+                            conversionFactor = 1000000;
+                            break;
+                        case "Micrometer":
+                            conversionFactor = 1000000000;
+                            break;
+                        case "Nanometer":
+                            conversionFactor = 1000000000000;
+                            break;
+                        case "Mile":
+                            conversionFactor = 0.62;
+                            break;
+                        case "Yard":
+                            conversionFactor = 1093.61;
+                            break;
+                        case "Inch":
+                            conversionFactor = 39.3701;
+                            break;
+                        case "Foot":
+                            conversionFactor = 3280.84;
+                            break;
+                        case "Nautical Mile":
+                            conversionFactor = 0.539957;
+                            break;
+                        // Add more cases for other units and their conversion factors
+                    }
+                    break;
+                case "Meter":
+                    switch (selectedOutputUnit) {
+                        case "Kilometer":
+                            conversionFactor = 0.001;
+                            break;
+                        case "Centimeter":
+                            conversionFactor = 100;
+                            break;
+                        case "Millimeter":
+                            conversionFactor = 1000;
+                            break;
+                        case "Micrometer":
+                            conversionFactor = 1000000;
+                            break;
+                        case "Nanometer":
+                            conversionFactor = 1000000000;
+                            break;
+                        case "Mile":
+                            conversionFactor = 0.000621371;
+                            break;
+                        case "Yard":
+                            conversionFactor = 1.09361;
+                            break;
+                        case "Inch":
+                            conversionFactor = 39.3701;
+                            break;
+                        case "Foot":
+                            conversionFactor = 3.28084;
+                            break;
+                        case "Nautical Mile":
+                            conversionFactor = 0.000539957;
+                            break;
+                        // Add more cases for other units and their conversion factors
+                    }
+                    break;
+                case "Centimeter":
+                    switch (selectedOutputUnit) {
+                        case "Kilometer":
+                            conversionFactor = 0.00001;
+                            break;
+                        case "Meter":
+                            conversionFactor = 0.01;
+                            break;
+                        case "Millimeter":
+                            conversionFactor = 10;
+                            break;
+                        case "Micrometer":
+                            conversionFactor = 10000;
+                            break;
+                        case "Nanometer":
+                            conversionFactor = 10000000;
+                            break;
+                        case "Mile":
+                            conversionFactor = 0.0000062137;
+                            break;
+                        case "Yard":
+                            conversionFactor = 0.0109361;
+                            break;
+                        case "Inch":
+                            conversionFactor = 0.393701;
+                            break;
+                        case "Foot":
+                            conversionFactor = 0.0328084;
+                            break;
+                        case "Nautical Mile":
+                            conversionFactor = 0.00000539957;
+                            break;
+                        // Add more cases for other units and their conversion factors
+                    }
+                    break;
+                case "Millimeter":
+                    switch (selectedOutputUnit) {
+                        case "Kilometer":
+                            conversionFactor = 0.000001;
+                            break;
+                        case "Meter":
+                            conversionFactor = 0.001;
+                            break;
+                        case "Centimeter":
+                            conversionFactor = 0.1;
+                            break;
+                        case "Micrometer":
+                            conversionFactor = 1000;
+                            break;
+                        case "Nanometer":
+                            conversionFactor = 1000000;
+                            break;
+                        case "Mile":
+                            conversionFactor = 0.00000062137;
+                            break;
+                        case "Yard":
+                            conversionFactor = 0.00109361;
+                            break;
+                        case "Inch":
+                            conversionFactor = 0.0393701;
+                            break;
+                        case "Foot":
+                            conversionFactor = 0.00328084;
+                            break;
+                        case "Nautical Mile":
+                            conversionFactor = 0.000000539957;
+                            break;
+                        // Add more cases for other units and their conversion factors
+                    }
+                    break;
+                case "Foot":
+                    switch (selectedOutputUnit) {
+                        case "Kilometer":
+                            conversionFactor = 0.0003048;
+                            break;
+                        case "Meter":
+                            conversionFactor = 0.3048;
+                            break;
+                        case "Centimeter":
+                            conversionFactor = 30.48;
+                            break;
+                        case "Millimeter":
+                            conversionFactor = 304.8;
+                            break;
+                        case "Micrometer":
+                            conversionFactor = 304800;
+                            break;
+                        case "Nanometer":
+                            conversionFactor = 304800000;
+                            break;
+                        case "Mile":
+                            conversionFactor = 0.000189394;
+                            break;
+                        case "Yard":
+                            conversionFactor = 0.333333;
+                            break;
+                        case "Inch":
+                            conversionFactor = 12;
+                            break;
+                        case "Nautical Mile":
+                            conversionFactor = 0.000164579;
+                            break;
+                        // Add more cases for other units and their conversion factors
+                    }
+                    break;
+                case "Inch":
+                    switch (selectedOutputUnit) {
+                        case "Kilometer":
+                            conversionFactor = 0.0000254;
+                            break;
+                        case "Meter":
+                            conversionFactor = 0.0254;
+                            break;
+                        case "Centimeter":
+                            conversionFactor = 2.54;
+                            break;
+                        case "Millimeter":
+                            conversionFactor = 25.4;
+                            break;
+                        case "Micrometer":
+                            conversionFactor = 25400;
+                            break;
+                        case "Nanometer":
+                            conversionFactor = 25400000;
+                            break;
+                        case "Mile":
+                            conversionFactor = 0.000015783;
+                            break;
+                        case "Yard":
+                            conversionFactor = 0.0277778;
+                            break;
+                        case "Foot":
+                            conversionFactor = 0.0833333;
+                            break;
+                        case "Nautical Mile":
+                            conversionFactor = 0.0000137149;
+                            break;
+                        // Add more cases for other units and their conversion factors
+                    }
+                    break;
+                case "Micrometer":
+                    switch (selectedOutputUnit) {
+                        case "Kilometer":
+                            conversionFactor = 0.000001;
+                            break;
+                        case "Meter":
+                            conversionFactor = 0.001;
+                            break;
+                        case "Centimeter":
+                            conversionFactor = 0.1;
+                            break;
+                        case "Millimeter":
+                            conversionFactor = 1;
+                            break;
+                        case "Nanometer":
+                            conversionFactor = 1000;
+                            break;
+                        case "Mile":
+                            conversionFactor = 0.00000062137;
+                            break;
+                        case "Yard":
+                            conversionFactor = 0.00109361;
+                            break;
+                        case "Inch":
+                            conversionFactor = 0.0393701;
+                            break;
+                        case "Foot":
+                            conversionFactor = 0.00328084;
+                            break;
+                        case "Nautical Mile":
+                            conversionFactor = 0.000000539957;
+                            break;
+                        // Add more cases for other units and their conversion factors
+                    }
+                    break;
+                case "Yard":
+                    switch (selectedOutputUnit) {
+                        case "Kilometer":
+                            conversionFactor = 0.0009144;
+                            break;
+                        case "Meter":
+                            conversionFactor = 0.9144;
+                            break;
+                        case "Centimeter":
+                            conversionFactor = 91.44;
+                            break;
+                        case "Millimeter":
+                            conversionFactor = 914.4;
+                            break;
+                        case "Micrometer":
+                            conversionFactor = 914400;
+                            break;
+                        case "Nanometer":
+                            conversionFactor = 914400000;
+                            break;
+                        case "Mile":
+                            conversionFactor = 0.000568182;
+                            break;
+                        case "Inch":
+                            conversionFactor = 36;
+                            break;
+                        case "Foot":
+                            conversionFactor = 3;
+                            break;
+                        case "Nautical Mile":
+                            conversionFactor = 0.000493737;
+                            break;
+                        // Add more cases for other units and their conversion factors
+                    }
+                    break;
+                case "Nautical Mile":
+                    switch (selectedOutputUnit) {
+                        case "Kilometer":
+                            conversionFactor = 1.852;
+                            break;
+                        case "Meter":
+                            conversionFactor = 1852;
+                            break;
+                        case "Centimeter":
+                            conversionFactor = 185200;
+                            break;
+                        case "Millimeter":
+                            conversionFactor = 1852000;
+                            break;
+                        case "Micrometer":
+                            conversionFactor = 1852000000;
+                            break;
+                        case "Nanometer":
+                            conversionFactor = 1852000000000;
+                            break;
+                        case "Mile":
+                            conversionFactor = 1.15078;
+                            break;
+                        case "Yard":
+                            conversionFactor = 2025.37;
+                            break;
+                        case "Inch":
+                            conversionFactor = 72913.4;
+                            break;
+                        case "Foot":
+                            conversionFactor = 6076.12;
+                            break;
+                        // Add more cases for other units and their conversion factors
+                    }
+                    break;
+                case "Nanometer":
+                    switch (selectedOutputUnit) {
+                        case "Kilometer":
+                            conversionFactor = 0.000000000001;
+                            break;
+                        case "Meter":
+                            conversionFactor = 0.000000001;
+                            break;
+                        case "Centimeter":
+                            conversionFactor = 0.0000001;
+                            break;
+                        case "Millimeter":
+                            conversionFactor = 0.000001;
+                            break;
+                        case "Micrometer":
+                            conversionFactor = 0.001;
+                            break;
+                        case "Mile":
+                            conversionFactor = 0.00000000000062137;
+                            break;
+                        case "Yard":
+                            conversionFactor = 0.00000000109361;
+                            break;
+                        case "Inch":
+                            conversionFactor = 0.0000000393701;
+                            break;
+                        case "Foot":
+                            conversionFactor = 0.00000000328084;
+                            break;
+                        case "Nautical Mile":
+                            conversionFactor = 0.000000000000539957;
+                            break;
+                        // Add more cases for other units and their conversion factors
+                    }
+                    break;
+                case "Mile":
+                    switch (selectedOutputUnit) {
+                        case "Kilometer":
+                            conversionFactor = 1.60934;
+                            break;
+                        case "Meter":
+                            conversionFactor = 1609.34;
+                            break;
+                        case "Centimeter":
+                            conversionFactor = 160934;
+                            break;
+                        case "Millimeter":
+                            conversionFactor = 1609340;
+                            break;
+                        case "Micrometer":
+                            conversionFactor = 1609340000;
+                            break;
+                        case "Nanometer":
+                            conversionFactor = 1609340000000;
+                            break;
+                        case "Yard":
+                            conversionFactor = 1760;
+                            break;
+                        case "Inch":
+                            conversionFactor = 63360;
+                            break;
+                        case "Foot":
+                            conversionFactor = 5280;
+                            break;
+                        case "Nautical Mile":
+                            conversionFactor = 0.868976;
+                            break;
+                        // Add more cases for other units and their conversion factors
+                    }
+                    break;
+                    //Area
+                case "Square Kilometre":
+                    switch (selectedOutputUnit) {
+                        case "Square Meter":
+                            conversionFactor = 1000000;
+                            break;
+                        case "Square Centimeter":
+                            conversionFactor = 10000000000;
+                            break;
+                        case "Square Millimeter":
+                            conversionFactor = 1000000000000;
+                            break;
+                        case "Hectare":
+                            conversionFactor = 100;
+                            break;
+                        case "Acre":
+                            conversionFactor = 247.105;
+                            break;
+                        case "Square Mile":
+                            conversionFactor = 0.386102;
+                            break;
+                        case "Square Yard":
+                            conversionFactor = 1195990.05;
+                            break;
+                        case "Square Foot":
+                            conversionFactor = 10763910.4;
+                            break;
+                        case "Square Inch":
+                            conversionFactor = 1550003100;
+                            break;
+                        // Add more cases for other units and their conversion factors
+                    }
+                    break;
+
+                case "Square Meter":
+                    switch (selectedOutputUnit) {
+                        case "Square Kilometre":
+                            conversionFactor = 0.000001;
+                            break;
+                        case "Square Centimeter":
+                            conversionFactor = 10000;
+                            break;
+                        case "Square Millimeter":
+                            conversionFactor = 1000000;
+                            break;
+                        case "Hectare":
+                            conversionFactor = 0.0001;
+                            break;
+                        case "Acre":
+                            conversionFactor = 0.000247105;
+                            break;
+                        case "Square Mile":
+                            conversionFactor = 0.000000386102;
+                            break;
+                        case "Square Yard":
+                            conversionFactor = 1.19599;
+                            break;
+                        case "Square Foot":
+                            conversionFactor = 10.7639;
+                            break;
+                        case "Square Inch":
+                            conversionFactor = 1550.0031;
+                            break;
+                        // Add more cases for other units and their conversion factors
+                    }
+                    break;
+
+                case "Square Centimeter":
+                    switch (selectedOutputUnit) {
+                        case "Square Kilometre":
+                            conversionFactor = 0.0000000001;
+                            break;
+                        case "Square Meter":
+                            conversionFactor = 0.0001;
+                            break;
+                        case "Square Millimeter":
+                            conversionFactor = 100;
+                            break;
+                        case "Hectare":
+                            conversionFactor = 0.00000001;
+                            break;
+                        case "Acre":
+                            conversionFactor = 0.0000000247105;
+                            break;
+                        case "Square Mile":
+                            conversionFactor = 0.0000000000386102;
+                            break;
+                        case "Square Yard":
+                            conversionFactor = 0.000119599;
+                            break;
+                        case "Square Foot":
+                            conversionFactor = 0.00107639;
+                            break;
+                        case "Square Inch":
+                            conversionFactor = 0.15500031;
+                            break;
+                        // Add more cases for other units and their conversion factors
+                    }
+                    break;
+
+                case "Square Millimeter":
+                    switch (selectedOutputUnit) {
+                        case "Square Kilometre":
+                            conversionFactor = 0.000000000001;
+                            break;
+                        case "Square Meter":
+                            conversionFactor = 0.000001;
+                            break;
+                        case "Square Centimeter":
+                            conversionFactor = 0.01;
+                            break;
+                        case "Hectare":
+                            conversionFactor = 0.0000000001;
+                            break;
+                        case "Acre":
+                            conversionFactor = 0.0000000000247105;
+                            break;
+                        case "Square Mile":
+                            conversionFactor = 0.0000000000000386102;
+                            break;
+                        case "Square Yard":
+                            conversionFactor = 0.00000119599;
+                            break;
+                        case "Square Foot":
+                            conversionFactor = 0.0000107639;
+                            break;
+                        case "Square Inch":
+                            conversionFactor = 0.0015500031;
+                            break;
+                        // Add more cases for other units and their conversion factors
+                    }
+                    break;
+
+                case "Hectare":
+                    switch (selectedOutputUnit) {
+                        case "Square Kilometre":
+                            conversionFactor = 0.01;
+                            break;
+                        case "Square Meter":
+                            conversionFactor = 10000;
+                            break;
+                        case "Square Centimeter":
+                            conversionFactor = 100000000;
+                            break;
+                        case "Square Millimeter":
+                            conversionFactor = 10000000000;
+                            break;
+                        case "Acre":
+                            conversionFactor = 2.47105;
+                            break;
+                        case "Square Mile":
+                            conversionFactor = 0.00386102;
+                            break;
+                        case "Square Yard":
+                            conversionFactor = 11959.9;
+                            break;
+                        case "Square Foot":
+                            conversionFactor = 107639.104;
+                            break;
+                        case "Square Inch":
+                            conversionFactor = 15500031;
+                            break;
+                        // Add more cases for other units and their conversion factors
+                    }
+                    break;
+
+                case "Acre":
+                    switch (selectedOutputUnit) {
+                        case "Square Kilometre":
+                            conversionFactor = 0.00404686;
+                            break;
+                        case "Square Meter":
+                            conversionFactor = 4046.86;
+                            break;
+                        case "Square Centimeter":
+                            conversionFactor = 40468564.2;
+                            break;
+                        case "Square Millimeter":
+                            conversionFactor = 4046856422.4;
+                            break;
+                        case "Hectare":
+                            conversionFactor = 0.404686;
+                            break;
+                        case "Square Mile":
+                            conversionFactor = 0.0015625;
+                            break;
+                        case "Square Yard":
+                            conversionFactor = 4840;
+                            break;
+                        case "Square Foot":
+                            conversionFactor = 43560;
+                            break;
+                        case "Square Inch":
+                            conversionFactor = 6272640;
+                            break;
+                        // Add more cases for other units and their conversion factors
+                    }
+                    break;
+
+                case "Square Mile":
+                    switch (selectedOutputUnit) {
+                        case "Square Kilometre":
+                            conversionFactor = 2.58999;
+                            break;
+                        case "Square Meter":
+                            conversionFactor = 2589990;
+                            break;
+                        case "Square Centimeter":
+                            conversionFactor = 258999000000;
+                            break;
+                        case "Square Millimeter":
+                            conversionFactor = 258999000000000;
+                            break;
+                        case "Hectare":
+                            conversionFactor = 258.999;
+                            break;
+                        case "Acre":
+                            conversionFactor = 640;
+                            break;
+                        case "Square Yard":
+                            conversionFactor = 3097600;
+                            break;
+                        case "Square Foot":
+                            conversionFactor = 27878400;
+                            break;
+                        case "Square Inch":
+                            conversionFactor = 4014489600;
+                            break;
+                        // Add more cases for other units and their conversion factors
+                    }
+                    break;
+
+                case "Square Yard":
+                    switch (selectedOutputUnit) {
+                        case "Square Kilometre":
+                            conversionFactor = 0.00000083612736;
+                            break;
+                        case "Square Meter":
+                            conversionFactor = 0.83612736;
+                            break;
+                        case "Square Centimeter":
+                            conversionFactor = 8361.2736;
+                            break;
+                        case "Square Millimeter":
+                            conversionFactor = 836127.36;
+                            break;
+                        case "Hectare":
+                            conversionFactor = 0.000083612736;
+                            break;
+                        case "Acre":
+                            conversionFactor = 0.000206612736;
+                            break;
+                        case "Square Mile":
+                            conversionFactor = 0.0000003228305785124;
+                            break;
+                        case "Square Foot":
+                            conversionFactor = 9;
+                            break;
+                        case "Square Inch":
+                            conversionFactor = 1296;
+                            break;
+                        // Add more cases for other units and their conversion factors
+                    }
+                    break;
+
+                case "Square Foot":
+                    switch (selectedOutputUnit) {
+                        case "Square Kilometre":
+                            conversionFactor = 0.00000009290304;
+                            break;
+                        case "Square Meter":
+                            conversionFactor = 0.09290304;
+                            break;
+                        case "Square Centimeter":
+                            conversionFactor = 929.0304;
+                            break;
+                        case "Square Millimeter":
+                            conversionFactor = 92903.04;
+                            break;
+                        case "Hectare":
+                            conversionFactor = 0.000009290304;
+                            break;
+                        case "Acre":
+                            conversionFactor = 0.0000229568411;
+                            break;
+                        case "Square Mile":
+                            conversionFactor = 0.00000003587006467541436;
+                            break;
+                        case "Square Yard":
+                            conversionFactor = 0.111111111;
+                            break;
+                        case "Square Inch":
+                            conversionFactor = 144;
+                            break;
+                        // Add more cases for other units and their conversion factors
+                    }
+                    break;
+
+                case "Square Inch":
+                    switch (selectedOutputUnit) {
+                        case "Square Kilometre":
+                            conversionFactor = 0.00000000064516;
+                            break;
+                        case "Square Meter":
+                            conversionFactor = 0.00064516;
+                            break;
+                        case "Square Centimeter":
+                            conversionFactor = 6.4516;
+                            break;
+                        case "Square Millimeter":
+                            conversionFactor = 645.16;
+                            break;
+                        case "Hectare":
+                            conversionFactor = 0.000000064516;
+                            break;
+                        case "Acre":
+                            conversionFactor = 0.0000001594225079;
+                            break;
+                        case "Square Mile":
+                            conversionFactor = 0.000000000249097546490634;
+                            break;
+                        case "Square Yard":
+                            conversionFactor = 0.000771604938;
+                            break;
+                        case "Square Foot":
+                            conversionFactor = 0.00694444444;
+                            break;
+                        // Add more cases for other units and their conversion factors
+                    }
+                    break;
+
+                //Data
+                case "Bit per Second":
+                    switch (selectedOutputUnit) {
+                        case "Byte per Second":
+                            conversionFactor = 0.125;
+                            break;
+                        case "Kilobit per Second":
+                            conversionFactor = 0.001;
+                            break;
+                        case "Kilobyte per Second":
+                            conversionFactor = 0.000125;
+                            break;
+                        case "Megabit per Second":
+                            conversionFactor = 0.000001;
+                            break;
+                        case "Megabyte per Second":
+                            conversionFactor = 0.000000125;
+                            break;
+                        case "Gigabit per Second":
+                            conversionFactor = 0.000000001;
+                            break;
+                        case "Gigabyte per Second":
+                            conversionFactor = 0.000000000125;
+                            break;
+                        case "Terabit per Second":
+                            conversionFactor = 0.000000000001;
+                            break;
+                        case "Terabyte per Second":
+                            conversionFactor = 0.000000000000125;
+                            break;
+                        case "Petabit per Second":
+                            conversionFactor = 0.000000000000001;
+                            break;
+                        case "Petabyte per Second":
+                            conversionFactor = 0.000000000000000125;
+                            break;
+                        // Add more cases for other units and their conversion factors
+                    }
+                    break;
+
+                case "Byte per Second":
+                    switch (selectedOutputUnit) {
+                        case "Bit per Second":
+                            conversionFactor = 8;
+                            break;
+                        case "Kilobit per Second":
+                            conversionFactor = 0.008;
+                            break;
+                        case "Kilobyte per Second":
+                            conversionFactor = 0.001;
+                            break;
+                        case "Megabit per Second":
+                            conversionFactor = 0.000008;
+                            break;
+                        case "Megabyte per Second":
+                            conversionFactor = 0.000001;
+                            break;
+                        case "Gigabit per Second":
+                            conversionFactor = 0.000000008;
+                            break;
+                        case "Gigabyte per Second":
+                            conversionFactor = 0.000000001;
+                            break;
+                        case "Terabit per Second":
+                            conversionFactor = 0.000000000008;
+                            break;
+                        case "Terabyte per Second":
+                            conversionFactor = 0.000000000001;
+                            break;
+                        case "Petabit per Second":
+                            conversionFactor = 0.000000000000008;
+                            break;
+                        case "Petabyte per Second":
+                            conversionFactor = 0.000000000000001;
+                            break;
+                        // Add more cases for other units and their conversion factors
+                    }
+                    break;
+
+                case "Kilobit per Second":
+                    switch (selectedOutputUnit) {
+                        case "Bit per Second":
+                            conversionFactor = 1000;
+                            break;
+                        case "Byte per Second":
+                            conversionFactor = 125;
+                            break;
+                        case "Kilobyte per Second":
+                            conversionFactor = 0.125;
+                            break;
+                        case "Megabit per Second":
+                            conversionFactor = 0.001;
+                            break;
+                        case "Megabyte per Second":
+                            conversionFactor = 0.000125;
+                            break;
+                        case "Gigabit per Second":
+                            conversionFactor = 0.000001;
+                            break;
+                        case "Gigabyte per Second":
+                            conversionFactor = 0.000000125;
+                            break;
+                        case "Terabit per Second":
+                            conversionFactor = 0.000000001;
+                            break;
+                        case "Terabyte per Second":
+                            conversionFactor = 0.000000000125;
+                            break;
+                        case "Petabit per Second":
+                            conversionFactor = 0.000000000001;
+                            break;
+                        case "Petabyte per Second":
+                            conversionFactor = 0.000000000000125;
+                            break;
+                        // Add more cases for other units and their conversion factors
+                    }
+                    break;
+
+                case "Kilobyte per Second":
+                    switch (selectedOutputUnit) {
+                        case "Bit per Second":
+                            conversionFactor = 8000;
+                            break;
+                        case "Byte per Second":
+                            conversionFactor = 1000;
+                            break;
+                        case "Kilobit per Second":
+                            conversionFactor = 8;
+                            break;
+                        case "Megabit per Second":
+                            conversionFactor = 0.008;
+                            break;
+                        case "Megabyte per Second":
+                            conversionFactor = 0.001;
+                            break;
+                        case "Gigabit per Second":
+                            conversionFactor = 0.000008;
+                            break;
+                        case "Gigabyte per Second":
+                            conversionFactor = 0.000001;
+                            break;
+                        case "Terabit per Second":
+                            conversionFactor = 0.000000008;
+                            break;
+                        case "Terabyte per Second":
+                            conversionFactor = 0.000000001;
+                            break;
+                        case "Petabit per Second":
+                            conversionFactor = 0.000000000008;
+                            break;
+                        case "Petabyte per Second":
+                            conversionFactor = 0.000000000001;
+                            break;
+                        // Add more cases for other units and their conversion factors
+                    }
+                    break;
+
+                case "Megabit per Second":
+                    switch (selectedOutputUnit) {
+                        case "Bit per Second":
+                            conversionFactor = 1000000;
+                            break;
+                        case "Byte per Second":
+                            conversionFactor = 125000;
+                            break;
+                        case "Kilobit per Second":
+                            conversionFactor = 1000;
+                            break;
+                        case "Kilobyte per Second":
+                            conversionFactor = 125;
+                            break;
+                        case "Megabyte per Second":
+                            conversionFactor = 0.125;
+                            break;
+                        case "Gigabit per Second":
+                            conversionFactor = 0.001;
+                            break;
+                        case "Gigabyte per Second":
+                            conversionFactor = 0.000125;
+                            break;
+                        case "Terabit per Second":
+                            conversionFactor = 0.000001;
+                            break;
+                        case "Terabyte per Second":
+                            conversionFactor = 0.000000125;
+                            break;
+                        case "Petabit per Second":
+                            conversionFactor = 0.000000001;
+                            break;
+                        case "Petabyte per Second":
+                            conversionFactor = 0.000000000125;
+                            break;
+                        // Add more cases for other units and their conversion factors
+                    }
+                    break;
+
+                case "Megabyte per Second":
+                    switch (selectedOutputUnit) {
+                        case "Bit per Second":
+                            conversionFactor = 8000000;
+                            break;
+                        case "Byte per Second":
+                            conversionFactor = 1000000;
+                            break;
+                        case "Kilobit per Second":
+                            conversionFactor = 8000;
+                            break;
+                        case "Kilobyte per Second":
+                            conversionFactor = 1000;
+                            break;
+                        case "Megabit per Second":
+                            conversionFactor = 8;
+                            break;
+                        case "Gigabit per Second":
+                            conversionFactor = 0.008;
+                            break;
+                        case "Gigabyte per Second":
+                            conversionFactor = 0.001;
+                            break;
+                        case "Terabit per Second":
+                            conversionFactor = 0.000008;
+                            break;
+                        case "Terabyte per Second":
+                            conversionFactor = 0.000001;
+                            break;
+                        case "Petabit per Second":
+                            conversionFactor = 0.000000008;
+                            break;
+                        case "Petabyte per Second":
+                            conversionFactor = 0.000000001;
+                            break;
+                        // Add more cases for other units and their conversion factors
+                    }
+                    break;
+
+                case "Gigabit per Second":
+                    switch (selectedOutputUnit) {
+                        case "Bit per Second":
+                            conversionFactor = 1000000000;
+                            break;
+                        case "Byte per Second":
+                            conversionFactor = 125000000;
+                            break;
+                        case "Kilobit per Second":
+                            conversionFactor = 1000000;
+                            break;
+                        case "Kilobyte per Second":
+                            conversionFactor = 125000;
+                            break;
+                        case "Megabit per Second":
+                            conversionFactor = 1000;
+                            break;
+                        case "Megabyte per Second":
+                            conversionFactor = 125;
+                            break;
+                        case "Gigabyte per Second":
+                            conversionFactor = 0.125;
+                            break;
+                        case "Terabit per Second":
+                            conversionFactor = 0.001;
+                            break;
+                        case "Terabyte per Second":
+                            conversionFactor = 0.000125;
+                            break;
+                        case "Petabit per Second":
+                            conversionFactor = 0.000001;
+                            break;
+                        case "Petabyte per Second":
+                            conversionFactor = 0.000000125;
+                            break;
+                        // Add more cases for other units and their conversion factors
+                    }
+                    break;
+
+                case "Gigabyte per Second":
+                    switch (selectedOutputUnit) {
+                        case "Bit per Second":
+                            conversionFactor = 8000000000;
+                            break;
+                        case "Byte per Second":
+                            conversionFactor = 1000000000;
+                            break;
+                        case "Kilobit per Second":
+                            conversionFactor = 8000000;
+                            break;
+                        case "Kilobyte per Second":
+                            conversionFactor = 1000000;
+                            break;
+                        case "Megabit per Second":
+                            conversionFactor = 8000;
+                            break;
+                        case "Megabyte per Second":
+                            conversionFactor = 1000;
+                            break;
+                        case "Terabit per Second":
+                            conversionFactor = 0.008;
+                            break;
+                        case "Terabyte per Second":
+                            conversionFactor = 0.001;
+                            break;
+                        case "Petabit per Second":
+                            conversionFactor = 0.000008;
+                            break;
+                        case "Petabyte per Second":
+                            conversionFactor = 0.000001;
+                            break;
+                        // Add more cases for other units and their conversion factors
+                    }
+                    break;
+
+                case "Terabit per Second":
+                    switch (selectedOutputUnit) {
+                        case "Bit per Second":
+                            conversionFactor = 1000000000000;
+                            break;
+                        case "Byte per Second":
+                            conversionFactor = 125000000000;
+                            break;
+                        case "Kilobit per Second":
+                            conversionFactor = 1000000000;
+                            break;
+                        case "Kilobyte per Second":
+                            conversionFactor = 125000000;
+                            break;
+                        case "Megabit per Second":
+                            conversionFactor = 1000000;
+                            break;
+                        case "Megabyte per Second":
+                            conversionFactor = 125000;
+                            break;
+                        case "Gigabit per Second":
+                            conversionFactor = 1000;
+                            break;
+                        case "Gigabyte per Second":
+                            conversionFactor = 125;
+                            break;
+                        case "Terabyte per Second":
+                            conversionFactor = 0.125;
+                            break;
+                        case "Petabit per Second":
+                            conversionFactor = 0.001;
+                            break;
+                        case "Petabyte per Second":
+                            conversionFactor = 0.000125;
+                            break;
+                        // Add more cases for other units and their conversion factors
+                    }
+                    break;
+
+                case "Terabyte per Second":
+                    switch (selectedOutputUnit) {
+                        case "Bit per Second":
+                            conversionFactor = 8000000000000;
+                            break;
+                        case "Byte per Second":
+                            conversionFactor = 1000000000000;
+                            break;
+                        case "Kilobit per Second":
+                            conversionFactor = 8000000000;
+                            break;
+                        case "Kilobyte per Second":
+                            conversionFactor = 1000000000;
+                            break;
+                        case "Megabit per Second":
+                            conversionFactor = 8000000;
+                            break;
+                        case "Megabyte per Second":
+                            conversionFactor = 1000000;
+                            break;
+                        case "Gigabit per Second":
+                            conversionFactor = 8000;
+                            break;
+                        case "Gigabyte per Second":
+                            conversionFactor = 1000;
+                            break;
+                        case "Petabit per Second":
+                            conversionFactor = 0.008;
+                            break;
+                        case "Petabyte per Second":
+                            conversionFactor = 0.001;
+                            break;
+                        // Add more cases for other units and their conversion factors
+                    }
+                    break;
+
+                case "Petabit per Second":
+                    switch (selectedOutputUnit) {
+                        case "Bit per Second":
+                            conversionFactor = 1000000000000000;
+                            break;
+                        case "Byte per Second":
+                            conversionFactor = 125000000000000;
+                            break;
+                        case "Kilobit per Second":
+                            conversionFactor = 1000000000000;
+                            break;
+                        case "Kilobyte per Second":
+                            conversionFactor = 125000000000;
+                            break;
+                        case "Megabit per Second":
+                            conversionFactor = 1000000000;
+                            break;
+                        case "Megabyte per Second":
+                            conversionFactor = 125000000;
+                            break;
+                        case "Gigabit per Second":
+                            conversionFactor = 1000000;
+                            break;
+                        case "Gigabyte per Second":
+                            conversionFactor = 125000;
+                            break;
+                        case "Terabit per Second":
+                            conversionFactor = 1000;
+                            break;
+                        case "Terabyte per Second":
+                            conversionFactor = 125;
+                            break;
+                        case "Petabyte per Second":
+                            conversionFactor = 0.125;
+                            break;
+                        // Add more cases for other units and their conversion factors
+                    }
+                    break;
+
+                case "Petabyte per Second":
+                    switch (selectedOutputUnit) {
+                        case "Bit per Second":
+                            conversionFactor = 8000000000000000;
+                            break;
+                        case "Byte per Second":
+                            conversionFactor = 1000000000000000;
+                            break;
+                        case "Kilobit per Second":
+                            conversionFactor = 8000000000000;
+                            break;
+                        case "Kilobyte per Second":
+                            conversionFactor = 1000000000000;
+                            break;
+                        case "Megabit per Second":
+                            conversionFactor = 8000000000;
+                            break;
+                        case "Megabyte per Second":
+                            conversionFactor = 1000000000;
+                            break;
+                        case "Gigabit per Second":
+                            conversionFactor = 8000000;
+                            break;
+                        case "Gigabyte per Second":
+                            conversionFactor = 1000000;
+                            break;
+                        case "Terabit per Second":
+                            conversionFactor = 8000;
+                            break;
+                        case "Terabyte per Second":
+                            conversionFactor = 1000;
+                            break;
+                        case "Petabit per Second":
+                            conversionFactor = 8;
+                            break;
+                        // Add more cases for other units and their conversion factors
+                    }
+                    break;
+                    //Digital storage
+                case "Bit":
+    switch (selectedOutputUnit) {
+        case "Byte":
+            conversionFactor = 0.125;
+            break;
+        case "Kilobit":
+            conversionFactor = 0.001;
+            break;
+        case "Kilobyte":
+            conversionFactor = 0.000125;
+            break;
+        case "Megabit":
+            conversionFactor = 0.000001;
+            break;
+        case "Megabyte":
+            conversionFactor = 0.000000125;
+            break;
+        case "Gigabit":
+            conversionFactor = 0.000000001;
+            break;
+        case "Gigabyte":
+            conversionFactor = 0.000000000125;
+            break;
+        case "Terabit":
+            conversionFactor = 0.000000000001;
+            break;
+        case "Terabyte":
+            conversionFactor = 0.000000000000125;
+            break;
+        case "Petabit":
+            conversionFactor = 0.000000000000001;
+            break;
+        case "Petabyte":
+            conversionFactor = 0.000000000000000125;
+            break;
+        // Add more cases for other units and their conversion factors
+    }
+    break;
+
+                case "Byte":
+                switch (selectedOutputUnit) {
+                case "Bit":
+                conversionFactor = 8;
+                break;
+                case "Kilobit":
+                conversionFactor = 0.008;
+                break;
+                case "Kilobyte":
+                conversionFactor = 0.001;
+                break;
+                case "Megabit":
+                conversionFactor = 0.000008;
+                break;
+                case "Megabyte":
+                conversionFactor = 0.000001;
+                break;
+                case "Gigabit":
+                conversionFactor = 0.000000008;
+                break;
+                case "Gigabyte":
+                conversionFactor = 0.000000001;
+                break;
+                case "Terabit":
+                conversionFactor = 0.000000000008;
+                break;
+                case "Terabyte":
+                conversionFactor = 0.000000000001;
+                break;
+                case "Petabit":
+                conversionFactor = 0.000000000000008;
+                break;
+                case "Petabyte":
+                conversionFactor = 0.000000000000001;
+                break;
+                // Add more cases for other units and their conversion factors
+                }
+                break;
+
+                case "Kilobit":
+                switch (selectedOutputUnit) {
+                case "Bit":
+                conversionFactor = 1000;
+                break;
+                case "Byte":
+                conversionFactor = 125;
+                break;
+                case "Kilobyte":
+                conversionFactor = 0.125;
+                break;
+                case "Megabit":
+                conversionFactor = 0.001;
+                break;
+                case "Megabyte":
+                conversionFactor = 0.000125;
+                break;
+                case "Gigabit":
+                conversionFactor = 0.000001;
+                break;
+                case "Gigabyte":
+                conversionFactor = 0.000000125;
+                break;
+                case "Terabit":
+                conversionFactor = 0.000000001;
+                break;
+                case "Terabyte":
+                conversionFactor = 0.000000000125;
+                break;
+                case "Petabit":
+                conversionFactor = 0.000000000001;
+                break;
+                case "Petabyte":
+                conversionFactor = 0.000000000000125;
+                break;
+                // Add more cases for other units and their conversion factors
+                }
+                break;
+      
+                case "Kilobyte":
+                switch (selectedOutputUnit) {
+                case "Bit":
+                conversionFactor = 8000;
+                break;
+                case "Byte":
+                conversionFactor = 1000;
+                break;
+                case "Kilobit":
+                conversionFactor = 8;
+                break;
+                case "Megabit":
+                conversionFactor = 0.008;
+                break;
+                case "Megabyte":
+                conversionFactor = 0.001;
+                break;
+                case "Gigabit":
+                conversionFactor = 0.000008;
+                break;
+                case "Gigabyte":
+                conversionFactor = 0.000001;
+                break;
+                case "Terabit":
+                conversionFactor = 0.000000008;
+                break;
+                case "Terabyte":
+                conversionFactor = 0.000000001;
+                break;
+                case "Petabit":
+                conversionFactor = 0.000000000008;
+                break;
+                case "Petabyte":
+                conversionFactor = 0.000000000001;
+                break;
+                // Add more cases for other units and their conversion factors
+                }
+                break;
+
+                case "Megabit":
+                switch (selectedOutputUnit) {
+                case "Bit":
+                conversionFactor = 1000000;
+                break;
+                case "Byte":
+                conversionFactor = 125000;
+                break;
+                case "Kilobit":
+                conversionFactor = 1000;
+                break;
+                case "Kilobyte":
+                conversionFactor = 125;
+                break;
+                case "Megabyte":
+                conversionFactor = 0.125;
+                break;
+                case "Gigabit":
+                conversionFactor = 0.001;
+                break;
+                case "Gigabyte":
+                conversionFactor = 0.000125;
+                break;
+                case "Terabit":
+                conversionFactor = 0.000001;
+                break;
+                case "Terabyte":
+                conversionFactor = 0.000000125;
+                break;
+                case "Petabit":
+                conversionFactor = 0.000000001;
+                break;
+                case "Petabyte":
+                conversionFactor = 0.000000000125;
+                break;
+                // Add more cases for other units and their conversion factors
+                }
+                break;
+
+                case "Megabyte":
+                switch (selectedOutputUnit) {
+                case "Bit":
+                conversionFactor = 8000000;
+                break;
+                case "Byte":
+                conversionFactor = 1000000;
+                break;
+                case "Kilobit":
+                conversionFactor = 8000;
+                break;
+                case "Kilobyte":
+                conversionFactor = 1000;
+                break;
+                case "Megabit":
+                conversionFactor = 8;
+                break;
+                case "Gigabit":
+                conversionFactor = 0.008;
+                break;
+                case "Gigabyte":
+                conversionFactor = 0.001;
+                break;
+                case "Terabit":
+                conversionFactor = 0.000008;
+                break;
+                case "Terabyte":
+                conversionFactor = 0.000001;
+                break;
+                case "Petabit":
+                conversionFactor = 0.000000008;
+                break;
+                case "Petabyte":
+                conversionFactor = 0.000000001;
+                break;
+                // Add more cases for other units and their conversion factors
+                }
+                break;
+
+                case "Gigabit":
+                switch (selectedOutputUnit) {
+                case "Bit":
+                conversionFactor = 1000000000;
+                break;
+                case "Byte":
+                conversionFactor = 125000000;
+                break;
+                case "Kilobit":
+                conversionFactor = 1000000;
+                break;
+                case "Kilobyte":
+                conversionFactor = 125000;
+                break;
+                case "Megabit":
+                conversionFactor = 1000;
+                break;
+                case "Megabyte":
+                conversionFactor = 125;
+                break;
+                case "Gigabyte":
+                conversionFactor = 0.125;
+                break;
+                case "Terabit":
+                conversionFactor = 0.001;
+                break;
+                case "Terabyte":
+                conversionFactor = 0.000125;
+                break;
+                case "Petabit":
+                conversionFactor = 0.000001;
+                break;
+                case "Petabyte":
+                conversionFactor = 0.000000125;
+                break;
+                // Add more cases for other units and their conversion factors
+                }
+                break;
+
+                case "Gigabyte":
+                switch (selectedOutputUnit) {
+                case "Bit":
+                conversionFactor = 8000000000;
+                break;
+                case "Byte":
+                conversionFactor = 1000000000;
+                break;
+                case "Kilobit":
+                conversionFactor = 8000000;
+                break;
+                case "Kilobyte":
+                conversionFactor = 1000000;
+                break;
+                case "Megabit":
+                conversionFactor = 8000;
+                break;
+                case "Megabyte":
+                conversionFactor = 1000;
+                break;
+                case "Terabit":
+                conversionFactor = 0.008;
+                break;
+                case "Terabyte":
+                conversionFactor = 0.001;
+                break;
+                case "Petabit":
+                conversionFactor = 0.000008;
+                break;
+                case "Petabyte":
+                conversionFactor = 0.000001;
+                break;
+                // Add more cases for other units and their conversion factors
+                }
+                break;
+
+                case "Terabit":
+                switch (selectedOutputUnit) {
+                case "Bit":
+                conversionFactor = 1000000000000;
+                break;
+                case "Byte":
+                conversionFactor = 125000000000;
+                break;
+                case "Kilobit":
+                conversionFactor = 1000000000;
+                break;
+                case "Kilobyte":
+                conversionFactor = 125000000;
+                break;
+                case "Megabit":
+                conversionFactor = 1000000;
+                break;
+                case "Megabyte":
+                conversionFactor = 125000;
+                break;
+                case "Gigabit":
+                conversionFactor = 1000;
+                break;
+                case "Gigabyte":
+                conversionFactor = 125;
+                break;
+                case "Terabyte":
+                conversionFactor = 0.125;
+                break;
+                case "Petabit":
+                conversionFactor = 0.001;
+                break;
+                case "Petabyte":
+                conversionFactor = 0.000125;
+                break;
+                // Add more cases for other units and their conversion factors
+                }
+                break;
+
+                case "Terabyte":
+                switch (selectedOutputUnit) {
+                case "Bit":
+                conversionFactor = 8000000000000;
+                break;
+                case "Byte":
+                conversionFactor = 1000000000000;
+                break;
+                case "Kilobit":
+                conversionFactor = 8000000000;
+                break;
+                case "Kilobyte":
+                conversionFactor = 1000000000;
+                break;
+                case "Megabit":
+                conversionFactor = 8000000;
+                break;
+                case "Megabyte":
+                conversionFactor = 1000000;
+                break;
+                case "Gigabit":
+                conversionFactor = 8000;
+                break;
+                case "Gigabyte":
+                conversionFactor = 1000;
+                break;
+                case "Petabit":
+                conversionFactor = 0.008;
+                break;
+                case "Petabyte":
+                conversionFactor = 0.001;
+                break;
+                // Add more cases for other units and their conversion factors
+                }
+                break;
+
+                case "Petabit":
+                switch (selectedOutputUnit) {
+                case "Bit":
+                conversionFactor = 1000000000000000;
+                break;
+                case "Byte":
+                conversionFactor = 125000000000000;
+                break;
+                case "Kilobit":
+                conversionFactor = 1000000000000;
+                break;
+                case "Kilobyte":
+                conversionFactor = 125000000000;
+                break;
+                case "Megabit":
+                conversionFactor = 1000000000;
+                break;
+                case "Megabyte":
+                conversionFactor = 125000000;
+                break;
+                case "Gigabit":
+                conversionFactor = 1000000;
+                break;
+                case "Gigabyte":
+                conversionFactor = 125000;
+                break;
+                case "Terabit":
+                conversionFactor = 1000;
+                break;
+                case "Terabyte":
+                conversionFactor = 125;
+                break;
+                case "Petabyte":
+                conversionFactor = 0.125;
+                break;
+                // Add more cases for other units and their conversion factors
+                }
+                break;
+
+                case "Petabyte":
+                switch (selectedOutputUnit) {
+                case "Bit":
+                conversionFactor = 8000000000000000;
+                break;
+                case "Byte":
+                conversionFactor = 1000000000000000;
+                break;
+                case "Kilobit":
+                conversionFactor = 8000000000000;
+                break;
+                case "Kilobyte":
+                conversionFactor = 1000000000000;
+                break;
+                case "Megabit":
+                conversionFactor = 8000000000;
+                break;
+                case "Megabyte":
+                conversionFactor = 1000000000;
+                break;
+                case "Gigabit":
+                conversionFactor = 8000000;
+                break;
+                case "Gigabyte":
+                conversionFactor = 1000000;
+                break;
+                case "Terabit":
+                conversionFactor = 8000;
+                break;
+                case "Terabyte":
+                conversionFactor = 1000;
+                break;
+                case "Petabit":
+                conversionFactor = 8;
+                break;
+                // Add more cases for other units and their conversion factors
+                }
+                break;
+//Energy
+case "Joule":
+    switch (selectedOutputUnit) {
+        case "Kilojoule":
+            conversionFactor = 0.001;
+            break;
+        case "Calorie":
+            conversionFactor = 0.239006;
+            break;
+        case "Kilocalorie":
+            conversionFactor = 0.000239006;
+            break;
+        case "Electron Volt":
+            conversionFactor = 6.242e+18;
+            break;
+        case "Foot-Pound":
+            conversionFactor = 0.737562;
+            break;
+        case "British Thermal Unit":
+            conversionFactor = 0.000947817;
+            break;
+        case "Therm":
+            conversionFactor = 9.4804e-9;
+            break;
+        case "Watt-Hour":
+            conversionFactor = 0.000277778;
+            break;
+        case "Kilowatt-Hour":
+            conversionFactor = 2.7778e-7;
+            break;
+        case "Megawatt-Hour":
+            conversionFactor = 2.7778e-10;
+            break;
+        case "Gigawatt-Hour":
+            conversionFactor = 2.7778e-13;
+            break;
+        // Add more cases for other units and their conversion factors
+    }
+    break;
+
+case "Kilojoule":
+    switch (selectedOutputUnit) {
+        case "Joule":
+            conversionFactor = 1000;
+            break;
+        case "Calorie":
+            conversionFactor = 239.006;
+            break;
+        case "Kilocalorie":
+            conversionFactor = 0.239006;
+            break;
+        case "Electron Volt":
+            conversionFactor = 6.242e+21;
+            break;
+        case "Foot-Pound":
+            conversionFactor = 737.562;
+            break;
+        case "British Thermal Unit":
+            conversionFactor = 0.947817;
+            break;
+        case "Therm":
+            conversionFactor = 9.4804e-6;
+            break;
+        case "Watt-Hour":
+            conversionFactor = 0.277778;
+            break;
+        case "Kilowatt-Hour":
+            conversionFactor = 0.000277778;
+            break;
+        case "Megawatt-Hour":
+            conversionFactor = 2.7778e-7;
+            break;
+        case "Gigawatt-Hour":
+            conversionFactor = 2.7778e-10;
+            break;
+        // Add more cases for other units and their conversion factors
+    }
+    break;
+
+case "Calorie":
+    switch (selectedOutputUnit) {
+        case "Joule":
+            conversionFactor = 4.184;
+            break;
+        case "Kilojoule":
+            conversionFactor = 0.004184;
+            break;
+        case "Kilocalorie":
+            conversionFactor = 0.001;
+            break;
+        case "Electron Volt":
+            conversionFactor = 2.6114e+19;
+            break;
+        case "Foot-Pound":
+            conversionFactor = 3.08596;
+            break;
+        case "British Thermal Unit":
+            conversionFactor = 0.00396567;
+            break;
+        case "Therm":
+            conversionFactor = 3.96567e-8;
+            break;
+        case "Watt-Hour":
+            conversionFactor = 0.00116222;
+            break;
+        case "Kilowatt-Hour":
+            conversionFactor = 0.00000116222;
+            break;
+        case "Megawatt-Hour":
+            conversionFactor = 1.1622e-9;
+            break;
+        case "Gigawatt-Hour":
+            conversionFactor = 1.1622e-12;
+            break;
+        // Add more cases for other units and their conversion factors
+    }
+    break;
+
+case "Kilocalorie":
+    switch (selectedOutputUnit) {
+        case "Joule":
+            conversionFactor = 4184;
+            break;
+        case "Kilojoule":
+            conversionFactor = 4.184;
+            break;
+        case "Calorie":
+            conversionFactor = 1000;
+            break;
+        case "Electron Volt":
+            conversionFactor = 2.6114e+22;
+            break;
+        case "Foot-Pound":
+            conversionFactor = 3085.96;
+            break;
+        case "British Thermal Unit":
+            conversionFactor = 3.96567;
+            break;
+        case "Therm":
+            conversionFactor = 3.96567e-5;
+            break;
+        case "Watt-Hour":
+            conversionFactor = 1.16222;
+            break;
+        case "Kilowatt-Hour":
+            conversionFactor = 0.00116222;
+            break;
+        case "Megawatt-Hour":
+            conversionFactor = 0.00000116222;
+            break;
+        case "Gigawatt-Hour":
+            conversionFactor = 1.1622e-9;
+            break;
+        // Add more cases for other units and their conversion factors
+    }
+    break;
+
+case "Electron Volt":
+    switch (selectedOutputUnit) {
+        case "Joule":
+            conversionFactor = 1.6022e-19;
+            break;
+        case "Kilojoule":
+            conversionFactor = 1.6022e-22;
+            break;
+        case "Calorie":
+            conversionFactor = 3.8267e-20;
+            break;
+        case "Kilocalorie":
+            conversionFactor = 3.8267e-23;
+            break;
+        case "Foot-Pound":
+            conversionFactor = 1.1817e-19;
+            break;
+        case "British Thermal Unit":
+            conversionFactor = 1.5186e-22;
+            break;
+        case "Therm":
+            conversionFactor = 1.5186e-26;
+            break;
+        case "Watt-Hour":
+            conversionFactor = 4.4505e-23;
+            break;
+        case "Kilowatt-Hour":
+            conversionFactor = 4.4505e-26;
+            break;
+        case "Megawatt-Hour":
+            conversionFactor = 4.4505e-29;
+            break;
+        case "Gigawatt-Hour":
+            conversionFactor = 4.4505e-32;
+            break;
+        // Add more cases for other units and their conversion factors
+    }
+    break;
+
+case "Foot-Pound":
+    switch (selectedOutputUnit) {
+        case "Joule":
+            conversionFactor = 1.35582;
+            break;
+        case "Kilojoule":
+            conversionFactor = 0.00135582;
+            break;
+        case "Calorie":
+            conversionFactor = 0.324048;
+            break;
+        case "Kilocalorie":
+            conversionFactor = 0.000324048;
+            break;
+        case "Electron Volt":
+            conversionFactor = 8.462e+18;
+            break;
+        case "British Thermal Unit":
+            conversionFactor = 0.00128507;
+            break;
+        case "Therm":
+            conversionFactor = 1.28507e-8;
+            break;
+        case "Watt-Hour":
+            conversionFactor = 0.000376616;
+            break;
+        case "Kilowatt-Hour":
+            conversionFactor = 3.7662e-7;
+            break;
+        case "Megawatt-Hour":
+            conversionFactor = 3.7662e-10;
+            break;
+        case "Gigawatt-Hour":
+            conversionFactor = 3.7662e-13;
+            break;
+        // Add more cases for other units and their conversion factors
+    }
+    break;
+
+case "British Thermal Unit":
+    switch (selectedOutputUnit) {
+        case "Joule":
+            conversionFactor = 1055.06;
+            break;
+        case "Kilojoule":
+            conversionFactor = 1.05506;
+            break;
+        case "Calorie":
+            conversionFactor = 252.164;
+            break;
+        case "Kilocalorie":
+            conversionFactor = 0.252164;
+            break;
+        case "Electron Volt":
+            conversionFactor = 6.585e+21;
+            break;
+        case "Foot-Pound":
+            conversionFactor = 778.169;
+            break;
+        case "Therm":
+            conversionFactor = 9.9693e-6;
+            break;
+        case "Watt-Hour":
+            conversionFactor = 0.293071;
+            break;
+        case "Kilowatt-Hour":
+            conversionFactor = 0.000293071;
+            break;
+        case "Megawatt-Hour":
+            conversionFactor = 2.9307e-7;
+            break;
+        case "Gigawatt-Hour":
+            conversionFactor = 2.9307e-10;
+            break;
+        // Add more cases for other units and their conversion factors
+    }
+    break;
+
+case "Therm":
+    switch (selectedOutputUnit) {
+        case "Joule":
+            conversionFactor = 1.05506e+8;
+            break;
+        case "Kilojoule":
+            conversionFactor = 105506;
+            break;
+        case "Calorie":
+            conversionFactor = 2.52164e+7;
+            break;
+        case "Kilocalorie":
+            conversionFactor = 25216.4;
+            break;
+        case "Electron Volt":
+            conversionFactor = 6.585e+26;
+            break;
+        case "Foot-Pound":
+            conversionFactor = 7.78169e+7;
+            break;
+        case "British Thermal Unit":
+            conversionFactor = 99976.1;
+            break;
+        case "Watt-Hour":
+            conversionFactor = 29307.1;
+            break;
+        case "Kilowatt-Hour":
+            conversionFactor = 29.3071;
+            break;
+        case "Megawatt-Hour":
+            conversionFactor = 0.0293071;
+            break;
+        case "Gigawatt-Hour":
+            conversionFactor = 2.9307e-5;
+            break;
+        // Add more cases for other units and their conversion factors
+    }
+    break;
+
+case "Watt-Hour":
+    switch (selectedOutputUnit) {
+        case "Joule":
+            conversionFactor = 3600;
+            break;
+        case "Kilojoule":
+            conversionFactor = 3.6;
+            break;
+        case "Calorie":
+            conversionFactor = 860.421;
+            break;
+        case "Kilocalorie":
+            conversionFactor = 0.860421;
+            break;
+        case "Electron Volt":
+            conversionFactor = 2.2469e+19;
+            break;
+        case "Foot-Pound":
+            conversionFactor = 2655.22;
+            break;
+        case "British Thermal Unit":
+            conversionFactor = 3.41214;
+            break;
+        case "Therm":
+            conversionFactor = 3.41214e-5;
+            break;
+        case "Kilowatt-Hour":
+            conversionFactor = 0.001;
+            break;
+        case "Megawatt-Hour":
+            conversionFactor = 1e-6;
+            break;
+        case "Gigawatt-Hour":
+            conversionFactor = 1e-9;
+            break;
+        // Add more cases for other units and their conversion factors
+    }
+    break;
+
+case "Kilowatt-Hour":
+    switch (selectedOutputUnit) {
+        case "Joule":
+            conversionFactor = 3.6e+6;
+            break;
+        case "Kilojoule":
+            conversionFactor = 3600;
+            break;
+        case "Calorie":
+            conversionFactor = 860421;
+            break;
+        case "Kilocalorie":
+            conversionFactor = 860.421;
+            break;
+        case "Electron Volt":
+            conversionFactor = 2.2469e+22;
+            break;
+        case "Foot-Pound":
+            conversionFactor = 2655220;
+            break;
+        case "British Thermal Unit":
+            conversionFactor = 3412.14;
+            break;
+        case "Therm":
+            conversionFactor = 0.0341214;
+            break;
+        case "Watt-Hour":
+            conversionFactor = 1000;
+            break;
+        case "Megawatt-Hour":
+            conversionFactor = 0.001;
+            break;
+        case "Gigawatt-Hour":
+            conversionFactor = 1e-6;
+            break;
+        // Add more cases for other units and their conversion factors
+    }
+    break;
+
+case "Megawatt-Hour":
+    switch (selectedOutputUnit) {
+        case "Joule":
+            conversionFactor = 3.6e+9;
+            break;
+        case "Kilojoule":
+            conversionFactor = 3.6e+6;
+            break;
+        case "Calorie":
+            conversionFactor = 860421000;
+            break;
+        case "Kilocalorie":
+            conversionFactor = 860421;
+            break;
+        case "Electron Volt":
+            conversionFactor = 2.2469e+25;
+            break;
+        case "Foot-Pound":
+            conversionFactor = 2655220000;
+            break;
+        case "British Thermal Unit":
+            conversionFactor = 3412140;
+            break;
+        case "Therm":
+            conversionFactor = 34.1214;
+            break;
+        case "Watt-Hour":
+            conversionFactor = 1e+6;
+            break;
+        case "Kilowatt-Hour":
+            conversionFactor = 1000;
+            break;
+        case "Gigawatt-Hour":
+            conversionFactor = 0.001;
+            break;
+        // Add more cases for other units and their conversion factors
+    }
+    break;
+
+case "Gigawatt-Hour":
+    switch (selectedOutputUnit) {
+        case "Joule":
+            conversionFactor = 3.6e+12;
+            break;
+        case "Kilojoule":
+            conversionFactor = 3.6e+9;
+            break;
+        case "Calorie":
+            conversionFactor = 860421000000;
+            break;
+        case "Kilocalorie":
+            conversionFactor = 860421000;
+            break;
+        case "Electron Volt":
+            conversionFactor = 2.2469e+28;
+            break;
+        case "Foot-Pound":
+            conversionFactor = 2655220000000;
+            break;
+        case "British Thermal Unit":
+            conversionFactor = 3412140000;
+            break;
+        case "Therm":
+            conversionFactor = 34121.4;
+            break;
+        case "Watt-Hour":
+            conversionFactor = 1e+9;
+            break;
+        case "Kilowatt-Hour":
+            conversionFactor = 1e+6;
+            break;
+        case "Megawatt-Hour":
+            conversionFactor = 1000;
+            break;
+        // Add more cases for other units and their conversion factors
+    }
+    break;
+    //Frequency
+    case "Hertz":
+    switch (selectedOutputUnit) {
+        case "Kilohertz":
+            conversionFactor = 0.001;
+            break;
+        case "Megahertz":
+            conversionFactor = 0.000001;
+            break;
+        case "Gigahertz":
+            conversionFactor = 0.000000001;
+            break;
+        case "Terahertz":
+            conversionFactor = 0.000000000001;
+            break;
+        case "Revolutions per Minute":
+            conversionFactor = 60;
+            break;
+        case "Revolutions per Second":
+            conversionFactor = 1;
+            break;
+        case "Radians per Second":
+            conversionFactor = 6.28319;
+            break;
+        // Add more cases for other units and their conversion factors
+    }
+    break;
+
+case "Kilohertz":
+    switch (selectedOutputUnit) {
+        case "Hertz":
+            conversionFactor = 1000;
+            break;
+        case "Megahertz":
+            conversionFactor = 0.001;
+            break;
+        case "Gigahertz":
+            conversionFactor = 0.000001;
+            break;
+        case "Terahertz":
+            conversionFactor = 0.000000001;
+            break;
+        case "Revolutions per Minute":
+            conversionFactor = 60000;
+            break;
+        case "Revolutions per Second":
+            conversionFactor = 1000;
+            break;
+        case "Radians per Second":
+            conversionFactor = 6283.19;
+            break;
+        // Add more cases for other units and their conversion factors
+    }
+    break;
+
+case "Megahertz":
+    switch (selectedOutputUnit) {
+        case "Hertz":
+            conversionFactor = 1000000;
+            break;
+        case "Kilohertz":
+            conversionFactor = 1000;
+            break;
+        case "Gigahertz":
+            conversionFactor = 0.001;
+            break;
+        case "Terahertz":
+            conversionFactor = 0.000001;
+            break;
+        case "Revolutions per Minute":
+            conversionFactor = 60000000;
+            break;
+        case "Revolutions per Second":
+            conversionFactor = 1000000;
+            break;
+        case "Radians per Second":
+            conversionFactor = 6283185.79;
+            break;
+        // Add more cases for other units and their conversion factors
+    }
+    break;
+
+case "Gigahertz":
+    switch (selectedOutputUnit) {
+        case "Hertz":
+            conversionFactor = 1000000000;
+            break;
+        case "Kilohertz":
+            conversionFactor = 1000000;
+            break;
+        case "Megahertz":
+            conversionFactor = 1000;
+            break;
+        case "Terahertz":
+            conversionFactor = 0.001;
+            break;
+        case "Revolutions per Minute":
+            conversionFactor = 60000000000;
+            break;
+        case "Revolutions per Second":
+            conversionFactor = 1000000000;
+            break;
+        case "Radians per Second":
+            conversionFactor = 6283185307.95;
+            break;
+        // Add more cases for other units and their conversion factors
+    }
+    break;
+
+case "Terahertz":
+    switch (selectedOutputUnit) {
+        case "Hertz":
+            conversionFactor = 1000000000000;
+            break;
+        case "Kilohertz":
+            conversionFactor = 1000000000;
+            break;
+        case "Megahertz":
+            conversionFactor = 1000000;
+            break;
+        case "Gigahertz":
+            conversionFactor = 1000;
+            break;
+        case "Revolutions per Minute":
+            conversionFactor = 60000000000000;
+            break;
+        case "Revolutions per Second":
+            conversionFactor = 1000000000000;
+            break;
+        case "Radians per Second":
+            conversionFactor = 6283185307952.72;
+            break;
+        // Add more cases for other units and their conversion factors
+    }
+    break;
+
+case "Revolutions per Minute":
+    switch (selectedOutputUnit) {
+        case "Hertz":
+            conversionFactor = 0.0166667;
+            break;
+        case "Kilohertz":
+            conversionFactor = 0.0000166667;
+            break;
+        case "Megahertz":
+            conversionFactor = 0.0000000166667;
+            break;
+        case "Gigahertz":
+            conversionFactor = 0.0000000000166667;
+            break;
+        case "Terahertz":
+            conversionFactor = 0.0000000000000166667;
+            break;
+        case "Revolutions per Second":
+            conversionFactor = 0.0166667;
+            break;
+        case "Radians per Second":
+            conversionFactor = 0.104719755;
+            break;
+        // Add more cases for other units and their conversion factors
+    }
+    break;
+
+case "Revolutions per Second":
+    switch (selectedOutputUnit) {
+        case "Hertz":
+            conversionFactor = 1;
+            break;
+        case "Kilohertz":
+            conversionFactor = 0.001;
+            break;
+        case "Megahertz":
+            conversionFactor = 0.000001;
+            break;
+        case "Gigahertz":
+            conversionFactor = 0.000000001;
+            break;
+        case "Terahertz":
+            conversionFactor = 0.000000000001;
+            break;
+        case "Revolutions per Minute":
+            conversionFactor = 60;
+            break;
+        case "Radians per Second":
+            conversionFactor = 6.28319;
+            break;
+        // Add more cases for other units and their conversion factors
+    }
+    break;
+
+case "Radians per Second":
+    switch (selectedOutputUnit) {
+        case "Hertz":
+            conversionFactor = 0.159154943;
+            break;
+        case "Kilohertz":
+            conversionFactor = 0.000159155;
+            break;
+        case "Megahertz":
+            conversionFactor = 0.000000159155;
+            break;
+        case "Gigahertz":
+            conversionFactor = 0.000000000159155;
+            break;
+        case "Terahertz":
+            conversionFactor = 0.000000000000159155;
+            break;
+        case "Revolutions per Minute":
+            conversionFactor = 9.5493;
+            break;
+        case "Revolutions per Second":
+            conversionFactor = 0.159154943;
+            break;
+        // Add more cases for other units and their conversion factors
+    }
+    break;
+//Fuel Economy
+                case "Miles per Gallon (US)":
+                    switch (selectedOutputUnit) {
+                        case "Miles per Gallon (UK)":
+                            conversionFactor = 0.832674;
+                            break;
+                        case "Kilometers per Liter":
+                            conversionFactor = 0.425144;
+                            break;
+                        case "Liters per 100 Kilometers":
+                            conversionFactor = 235.215;
+                            break;
+                        // Add more cases for other units and their conversion factors
+                    }
+                    break;
+
+                case "Miles per Gallon (UK)":
+                    switch (selectedOutputUnit) {
+                        case "Miles per Gallon (US)":
+                            conversionFactor = 1.20095;
+                            break;
+                        case "Kilometers per Liter":
+                            conversionFactor = 0.514444;
+                            break;
+                        case "Liters per 100 Kilometers":
+                            conversionFactor = 282.481;
+                            break;
+                        // Add more cases for other units and their conversion factors
+                    }
+                    break;
+
+                case "Kilometers per Liter":
+                    switch (selectedOutputUnit) {
+                        case "Miles per Gallon (US)":
+                            conversionFactor = 2.35215;
+                            break;
+                        case "Miles per Gallon (UK)":
+                            conversionFactor = 1.94256;
+                            break;
+                        case "Liters per 100 Kilometers":
+                            conversionFactor = 100;
+                            break;
+                        // Add more cases for other units and their conversion factors
+                    }
+                    break;
+
+                case "Liters per 100 Kilometers":
+                    switch (selectedOutputUnit) {
+                        case "Miles per Gallon (US)":
+                            conversionFactor = 0.425144;
+                            break;
+                        case "Miles per Gallon (UK)":
+                            conversionFactor = 0.354006;
+                            break;
+                        case "Kilometers per Liter":
+                            conversionFactor = 0.01;
+                            break;
+                        // Add more cases for other units and their conversion factors
+                    }
+                    break;
+
+
+//mass
+case "Tonne":
+    switch (selectedOutputUnit) {
+        case "Kilogram":
+            conversionFactor = 1000;
+            break;
+        case "Gram":
+            conversionFactor = 1000000;
+            break;
+        case "Milligram":
+            conversionFactor = 1000000000;
+            break;
+        case "Microgram":
+            conversionFactor = 1000000000000;
+            break;
+        case "Imperial Ton":
+            conversionFactor = 0.984207;
+            break;
+        case "US Ton":
+            conversionFactor = 1.10231;
+            break;
+        case "Stone":
+            conversionFactor = 157.473;
+            break;
+        case "Pound":
+            conversionFactor = 2204.62;
+            break;
+        case "Ounce":
+            conversionFactor = 35274;
+            break;
+        // Add more cases for other units and their conversion factors
+    }
+    break;
+
+case "Kilogram":
+    switch (selectedOutputUnit) {
+        case "Tonne":
+            conversionFactor = 0.001;
+            break;
+        case "Gram":
+            conversionFactor = 1000;
+            break;
+        case "Milligram":
+            conversionFactor = 1000000;
+            break;
+        case "Microgram":
+            conversionFactor = 1000000000;
+            break;
+        case "Imperial Ton":
+            conversionFactor = 0.000984207;
+            break;
+        case "US Ton":
+            conversionFactor = 0.00110231;
+            break;
+        case "Stone":
+            conversionFactor = 0.157473;
+            break;
+        case "Pound":
+            conversionFactor = 2.20462;
+            break;
+        case "Ounce":
+            conversionFactor = 35.274;
+            break;
+        // Add more cases for other units and their conversion factors
+    }
+    break;
+
+case "Gram":
+    switch (selectedOutputUnit) {
+        case "Tonne":
+            conversionFactor = 0.000001;
+            break;
+        case "Kilogram":
+            conversionFactor = 0.001;
+            break;
+        case "Milligram":
+            conversionFactor = 1000;
+            break;
+        case "Microgram":
+            conversionFactor = 1000000;
+            break;
+        case "Imperial Ton":
+            conversionFactor = 0.000000984207;
+            break;
+        case "US Ton":
+            conversionFactor = 0.00000110231;
+            break;
+        case "Stone":
+            conversionFactor = 0.000157473;
+            break;
+        case "Pound":
+            conversionFactor = 0.00220462;
+            break;
+        case "Ounce":
+            conversionFactor = 0.035274;
+            break;
+        // Add more cases for other units and their conversion factors
+    }
+    break;
+
+case "Milligram":
+    switch (selectedOutputUnit) {
+        case "Tonne":
+            conversionFactor = 0.000000001;
+            break;
+        case "Kilogram":
+            conversionFactor = 0.000001;
+            break;
+        case "Gram":
+            conversionFactor = 0.001;
+            break;
+        case "Microgram":
+            conversionFactor = 1000;
+            break;
+        case "Imperial Ton":
+            conversionFactor = 0.000000000984207;
+            break;
+        case "US Ton":
+            conversionFactor = 0.00000000110231;
+            break;
+        case "Stone":
+            conversionFactor = 0.000000157473;
+            break;
+        case "Pound":
+            conversionFactor = 0.00000220462;
+            break;
+        case "Ounce":
+            conversionFactor = 0.000035274;
+            break;
+        // Add more cases for other units and their conversion factors
+    }
+    break;
+
+case "Microgram":
+    switch (selectedOutputUnit) {
+        case "Tonne":
+            conversionFactor = 0.000000000001;
+            break;
+        case "Kilogram":
+            conversionFactor = 0.000000001;
+            break;
+        case "Gram":
+            conversionFactor = 0.000001;
+            break;
+        case "Milligram":
+            conversionFactor = 0.001;
+            break;
+        case "Imperial Ton":
+            conversionFactor = 0.000000000000984207;
+            break;
+        case "US Ton":
+            conversionFactor = 0.00000000000110231;
+            break;
+        case "Stone":
+            conversionFactor = 0.000000000157473;
+            break;
+        case "Pound":
+            conversionFactor = 0.00000000220462;
+            break;
+        case "Ounce":
+            conversionFactor = 0.000000035274;
+            break;
+        // Add more cases for other units and their conversion factors
+    }
+    break;
+
+case "Imperial Ton":
+    switch (selectedOutputUnit) {
+        case "Tonne":
+            conversionFactor = 1.01605;
+            break;
+        case "Kilogram":
+            conversionFactor = 1016.05;
+            break;
+        case "Gram":
+            conversionFactor = 1016050;
+            break;
+        case "Milligram":
+            conversionFactor = 1016050000;
+            break;
+        case "Microgram":
+            conversionFactor = 1016050000000;
+            break;
+        case "US Ton":
+            conversionFactor = 1.12;
+            break;
+        case "Stone":
+            conversionFactor = 160;
+            break;
+        case "Pound":
+            conversionFactor = 2240;
+            break;
+        case "Ounce":
+            conversionFactor = 35840;
+            break;
+        // Add more cases for other units and their conversion factors
+    }
+    break;
+
+case "US Ton":
+    switch (selectedOutputUnit) {
+        case "Tonne":
+            conversionFactor = 0.907185;
+            break;
+        case "Kilogram":
+            conversionFactor = 907.185;
+            break;
+        case "Gram":
+            conversionFactor = 907185;
+            break;
+        case "Milligram":
+            conversionFactor = 907185000;
+            break;
+        case "Microgram":
+            conversionFactor = 907185000000;
+            break;
+        case "Imperial Ton":
+            conversionFactor = 0.892857;
+            break;
+        case "Stone":
+            conversionFactor = 142.857;
+            break;
+        case "Pound":
+            conversionFactor = 2000;
+            break;
+        case "Ounce":
+            conversionFactor = 32000;
+            break;
+        // Add more cases for other units and their conversion factors
+    }
+    break;
+
+case "Stone":
+    switch (selectedOutputUnit) {
+        case "Tonne":
+            conversionFactor = 0.00635029;
+            break;
+        case "Kilogram":
+            conversionFactor = 6.35029;
+            break;
+        case "Gram":
+            conversionFactor = 6350.29;
+            break;
+        case "Milligram":
+            conversionFactor = 6350290;
+            break;
+        case "Microgram":
+            conversionFactor = 6350290000;
+            break;
+        case "Imperial Ton":
+            conversionFactor = 0.00625;
+            break;
+        case "US Ton":
+            conversionFactor = 0.007;
+            break;
+        case "Pound":
+            conversionFactor = 14;
+            break;
+        case "Ounce":
+            conversionFactor = 224;
+            break;
+        // Add more cases for other units and their conversion factors
+    }
+    break;
+
+case "Pound":
+    switch (selectedOutputUnit) {
+        case "Tonne":
+            conversionFactor = 0.000453592;
+            break;
+        case "Kilogram":
+            conversionFactor = 0.453592;
+            break;
+        case "Gram":
+            conversionFactor = 453.592;
+            break;
+        case "Milligram":
+            conversionFactor = 453592;
+            break;
+        case "Microgram":
+            conversionFactor = 453592000;
+            break;
+        case "Imperial Ton":
+            conversionFactor = 0.000446429;
+            break;
+        case "US Ton":
+            conversionFactor = 0.0005;
+            break;
+        case "Stone":
+            conversionFactor = 0.0714286;
+            break;
+        case "Ounce":
+            conversionFactor = 16;
+            break;
+        // Add more cases for other units and their conversion factors
+    }
+    break;
+
+case "Ounce":
+    switch (selectedOutputUnit) {
+        case "Tonne":
+            conversionFactor = 0.0000283495;
+            break;
+        case "Kilogram":
+            conversionFactor = 0.0283495;
+            break;
+        case "Gram":
+            conversionFactor = 28.3495;
+            break;
+        case "Milligram":
+            conversionFactor = 28349.5;
+            break;
+        case "Microgram":
+            conversionFactor = 28349500;
+            break;
+        case "Imperial Ton":
+            conversionFactor = 0.0000279018;
+            break;
+        case "US Ton":
+            conversionFactor = 0.00003125;
+            break;
+        case "Stone":
+            conversionFactor = 0.00446429;
+            break;
+        case "Pound":
+            conversionFactor = 0.0625;
+            break;
+        // Add more cases for other units and their conversion factors
+    }
+    break;
+//Plane Angle
+case "Degree":
+    switch (selectedOutputUnit) {
+        case "Radian":
+            conversionFactor = 0.0174533;
+            break;
+        case "Grad":
+            conversionFactor = 1.11111;
+            break;
+        case "Minute of Arc":
+            conversionFactor = 60;
+            break;
+        case "Second of Arc":
+            conversionFactor = 3600;
+            break;
+        case "Milliradian":
+            conversionFactor = 17.4533;
+            break;
+        // Add more cases for other units and their conversion factors
+    }
+    break;
+
+case "Radian":
+    switch (selectedOutputUnit) {
+        case "Degree":
+            conversionFactor = 57.2958;
+            break;
+        case "Grad":
+            conversionFactor = 63.6619;
+            break;
+        case "Minute of Arc":
+            conversionFactor = 3437.75;
+            break;
+        case "Second of Arc":
+            conversionFactor = 206265;
+            break;
+        case "Milliradian":
+            conversionFactor = 1000;
+            break;
+        // Add more cases for other units and their conversion factors
+    }
+    break;
+
+case "Grad":
+    switch (selectedOutputUnit) {
+        case "Degree":
+            conversionFactor = 0.9;
+            break;
+        case "Radian":
+            conversionFactor = 0.015708;
+            break;
+        case "Minute of Arc":
+            conversionFactor = 54;
+            break;
+        case "Second of Arc":
+            conversionFactor = 3240;
+            break;
+        case "Milliradian":
+            conversionFactor = 15.708;
+            break;
+        // Add more cases for other units and their conversion factors
+    }
+    break;
+
+case "Minute of Arc":
+    switch (selectedOutputUnit) {
+        case "Degree":
+            conversionFactor = 0.0166667;
+            break;
+        case "Radian":
+            conversionFactor = 0.000290888;
+            break;
+        case "Grad":
+            conversionFactor = 0.0185185;
+            break;
+        case "Second of Arc":
+            conversionFactor = 60;
+            break;
+        case "Milliradian":
+            conversionFactor = 0.290888;
+            break;
+        // Add more cases for other units and their conversion factors
+    }
+    break;
+
+case "Second of Arc":
+    switch (selectedOutputUnit) {
+        case "Degree":
+            conversionFactor = 0.000277778;
+            break;
+        case "Radian":
+            conversionFactor = 0.00000484814;
+            break;
+        case "Grad":
+            conversionFactor = 0.000308642;
+            break;
+        case "Minute of Arc":
+            conversionFactor = 0.0166667;
+            break;
+        case "Milliradian":
+            conversionFactor = 0.00484814;
+            break;
+        // Add more cases for other units and their conversion factors
+    }
+    break;
+
+case "Milliradian":
+    switch (selectedOutputUnit) {
+        case "Degree":
+            conversionFactor = 0.0572958;
+            break;
+        case "Radian":
+            conversionFactor = 0.001;
+            break;
+        case "Grad":
+            conversionFactor = 0.0636619;
+            break;
+        case "Minute of Arc":
+            conversionFactor = 3.43775;
+            break;
+        case "Second of Arc":
+            conversionFactor = 206.265;
+            break;
+        // Add more cases for other units and their conversion factors
+    }
+    break;
+//Pressure
+case "Pascal":
+    switch (selectedOutputUnit) {
+        case "Kilopascal":
+            conversionFactor = 0.001;
+            break;
+        case "Megapascal":
+            conversionFactor = 0.000001;
+            break;
+        case "Bar":
+            conversionFactor = 0.00001;
+            break;
+        case "Millibar":
+            conversionFactor = 0.01;
+            break;
+        case "Pound per Square Inch (psi)":
+            conversionFactor = 0.000145038;
+            break;
+        case "KSI":
+            conversionFactor = 1.45038e-7;
+            break;
+        case "Atmosphere":
+            conversionFactor = 9.86923e-6;
+            break;
+        case "Technical Atmosphere":
+            conversionFactor = 0.00000980665;
+            break;
+        case "Millimeter of Mercury (Torr)":
+            conversionFactor = 0.00750062;
+            break;
+        case "Centimeter of Water":
+            conversionFactor = 0.101972;
+            break;
+        case "Inch of Water":
+            conversionFactor = 0.00401463;
+            break;
+        // Add more cases for other units and their conversion factors
+    }
+    break;
+
+case "Kilopascal":
+    switch (selectedOutputUnit) {
+        case "Pascal":
+            conversionFactor = 1000;
+            break;
+        case "Megapascal":
+            conversionFactor = 0.001;
+            break;
+        case "Bar":
+            conversionFactor = 0.01;
+            break;
+        case "Millibar":
+            conversionFactor = 10;
+            break;
+        case "Pound per Square Inch (psi)":
+            conversionFactor = 0.145038;
+            break;
+        case "KSI":
+            conversionFactor = 0.000145038;
+            break;
+        case "Atmosphere":
+            conversionFactor = 0.00986923;
+            break;
+        case "Technical Atmosphere":
+            conversionFactor = 0.00980665;
+            break;
+        case "Millimeter of Mercury (Torr)":
+            conversionFactor = 7.50062;
+            break;
+        case "Centimeter of Water":
+            conversionFactor = 101.972;
+            break;
+        case "Inch of Water":
+            conversionFactor = 4.01463;
+            break;
+        // Add more cases for other units and their conversion factors
+    }
+    break;
+
+case "Megapascal":
+    switch (selectedOutputUnit) {
+        case "Pascal":
+            conversionFactor = 1000000;
+            break;
+        case "Kilopascal":
+            conversionFactor = 1000;
+            break;
+        case "Bar":
+            conversionFactor = 10;
+            break;
+        case "Millibar":
+            conversionFactor = 10000;
+            break;
+        case "Pound per Square Inch (psi)":
+            conversionFactor = 145.038;
+            break;
+        case "KSI":
+            conversionFactor = 0.145038;
+            break;
+        case "Atmosphere":
+            conversionFactor = 9.86923;
+            break;
+        case "Technical Atmosphere":
+            conversionFactor = 9.80665;
+            break;
+        case "Millimeter of Mercury (Torr)":
+            conversionFactor = 7500.62;
+            break;
+        case "Centimeter of Water":
+            conversionFactor = 101972;
+            break;
+        case "Inch of Water":
+            conversionFactor = 4014.63;
+            break;
+        // Add more cases for other units and their conversion factors
+    }
+    break;
+
+case "Bar":
+    switch (selectedOutputUnit) {
+        case "Pascal":
+            conversionFactor = 100000;
+            break;
+        case "Kilopascal":
+            conversionFactor = 100;
+            break;
+        case "Megapascal":
+            conversionFactor = 0.1;
+            break;
+        case "Millibar":
+            conversionFactor = 1000;
+            break;
+        case "Pound per Square Inch (psi)":
+            conversionFactor = 14.5038;
+            break;
+        case "KSI":
+            conversionFactor = 0.0145038;
+            break;
+        case "Atmosphere":
+            conversionFactor = 0.986923;
+            break;
+        case "Technical Atmosphere":
+            conversionFactor = 0.980665;
+            break;
+        case "Millimeter of Mercury (Torr)":
+            conversionFactor = 750.062;
+            break;
+        case "Centimeter of Water":
+            conversionFactor = 10197.2;
+            break;
+        case "Inch of Water":
+            conversionFactor = 401.463;
+            break;
+        // Add more cases for other units and their conversion factors
+    }
+    break;
+
+case "Millibar":
+    switch (selectedOutputUnit) {
+        case "Pascal":
+            conversionFactor = 100;
+            break;
+        case "Kilopascal":
+            conversionFactor = 0.1;
+            break;
+        case "Megapascal":
+            conversionFactor = 0.0001;
+            break;
+        case "Bar":
+            conversionFactor = 0.001;
+            break;
+        case "Pound per Square Inch (psi)":
+            conversionFactor = 0.0145038;
+            break;
+        case "KSI":
+            conversionFactor = 0.0000145038;
+            break;
+        case "Atmosphere":
+            conversionFactor = 0.000986923;
+            break;
+        case "Technical Atmosphere":
+            conversionFactor = 0.000980665;
+            break;
+        case "Millimeter of Mercury (Torr)":
+            conversionFactor = 0.750062;
+            break;
+        case "Centimeter of Water":
+            conversionFactor = 10.1972;
+            break;
+        case "Inch of Water":
+            conversionFactor = 0.401463;
+            break;
+        // Add more cases for other units and their conversion factors
+    }
+    break;
+
+case "Pound per Square Inch (psi)":
+    switch (selectedOutputUnit) {
+        case "Pascal":
+            conversionFactor = 6894.76;
+            break;
+        case "Kilopascal":
+            conversionFactor = 6.89476;
+            break;
+        case "Megapascal":
+            conversionFactor = 0.00689476;
+            break;
+        case "Bar":
+            conversionFactor = 0.0689476;
+            break;
+        case "Millibar":
+            conversionFactor = 68.9476;
+            break;
+        case "KSI":
+            conversionFactor = 0.001;
+            break;
+        case "Atmosphere":
+            conversionFactor = 0.068046;
+            break;
+        case "Technical Atmosphere":
+            conversionFactor = 0.0677451;
+            break;
+        case "Millimeter of Mercury (Torr)":
+            conversionFactor = 51.7149;
+            break;
+        case "Centimeter of Water":
+            conversionFactor = 703.068;
+            break;
+        case "Inch of Water":
+            conversionFactor = 27.7076;
+            break;
+        // Add more cases for other units and their conversion factors
+    }
+    break;
+
+case "KSI":
+    switch (selectedOutputUnit) {
+        case "Pascal":
+            conversionFactor = 6894757.29;
+            break;
+        case "Kilopascal":
+            conversionFactor = 6894.76;
+            break;
+        case "Megapascal":
+            conversionFactor = 6.89476;
+            break;
+        case "Bar":
+            conversionFactor = 68.9476;
+            break;
+        case "Millibar":
+            conversionFactor = 68947.6;
+            break;
+        case "Pound per Square Inch (psi)":
+            conversionFactor = 1000;
+            break;
+        case "Atmosphere":
+            conversionFactor = 68.046;
+            break;
+        case "Technical Atmosphere":
+            conversionFactor = 67.7451;
+            break;
+        case "Millimeter of Mercury (Torr)":
+            conversionFactor = 51714.9;
+            break;
+        case "Centimeter of Water":
+            conversionFactor = 703068;
+            break;
+        case "Inch of Water":
+            conversionFactor = 27707.6;
+            break;
+        // Add more cases for other units and their conversion factors
+    }
+    break;
+
+case "Atmosphere":
+    switch (selectedOutputUnit) {
+        case "Pascal":
+            conversionFactor = 101325;
+            break;
+        case "Kilopascal":
+            conversionFactor = 101.325;
+            break;
+        case "Megapascal":
+            conversionFactor = 0.101325;
+            break;
+        case "Bar":
+            conversionFactor = 1.01325;
+            break;
+        case "Millibar":
+            conversionFactor = 1013.25;
+            break;
+        case "Pound per Square Inch (psi)":
+            conversionFactor = 14.6959;
+            break;
+        case "KSI":
+            conversionFactor = 0.0146959;
+            break;
+        case "Technical Atmosphere":
+            conversionFactor = 0.987;
+            break;
+        case "Millimeter of Mercury (Torr)":
+            conversionFactor = 760;
+            break;
+        case "Centimeter of Water":
+            conversionFactor = 10332.3;
+            break;
+        case "Inch of Water":
+            conversionFactor = 407.171;
+            break;
+        // Add more cases for other units and their conversion factors
+    }
+    break;
+
+case "Technical Atmosphere":
+    switch (selectedOutputUnit) {
+        case "Pascal":
+            conversionFactor = 98066.5;
+            break;
+        case "Kilopascal":
+            conversionFactor = 98.0665;
+            break;
+        case "Megapascal":
+            conversionFactor = 0.0980665;
+            break;
+        case "Bar":
+            conversionFactor = 0.980665;
+            break;
+        case "Millibar":
+            conversionFactor = 980.665;
+            break;
+        case "Pound per Square Inch (psi)":
+            conversionFactor = 14.2233;
+            break;
+        case "KSI":
+            conversionFactor = 0.0142233;
+            break;
+        case "Atmosphere":
+            conversionFactor = 1.01325;
+            break;
+        case "Millimeter of Mercury (Torr)":
+            conversionFactor = 735.56;
+            break;
+        case "Centimeter of Water":
+            conversionFactor = 9996.61;
+            break;
+        case "Inch of Water":
+            conversionFactor = 393.7;
+            break;
+        // Add more cases for other units and their conversion factors
+    }
+    break;
+
+case "Millimeter of Mercury (Torr)":
+    switch (selectedOutputUnit) {
+        case "Pascal":
+            conversionFactor = 133.322;
+            break;
+        case "Kilopascal":
+            conversionFactor = 0.133322;
+            break;
+        case "Megapascal":
+            conversionFactor = 0.000133322;
+            break;
+        case "Bar":
+            conversionFactor = 0.00133322;
+            break;
+        case "Millibar":
+            conversionFactor = 1.33322;
+            break;
+        case "Pound per Square Inch (psi)":
+            conversionFactor = 0.0193368;
+            break;
+        case "KSI":
+            conversionFactor = 0.0000193368;
+            break;
+        case "Atmosphere":
+            conversionFactor = 0.00131579;
+            break;
+        case "Technical Atmosphere":
+            conversionFactor = 0.00135951;
+            break;
+        case "Centimeter of Water":
+            conversionFactor = 13.5951;
+            break;
+        case "Inch of Water":
+            conversionFactor = 0.535146;
+            break;
+        // Add more cases for other units and their conversion factors
+    }
+    break;
+
+case "Centimeter of Water":
+    switch (selectedOutputUnit) {
+        case "Pascal":
+            conversionFactor = 98.0665;
+            break;
+        case "Kilopascal":
+            conversionFactor = 0.0980665;
+            break;
+        case "Megapascal":
+            conversionFactor = 0.0000980665;
+            break;
+        case "Bar":
+            conversionFactor = 0.000980665;
+            break;
+        case "Millibar":
+            conversionFactor = 0.980665;
+            break;
+        case "Pound per Square Inch (psi)":
+            conversionFactor = 0.0142233;
+            break;
+        case "KSI":
+            conversionFactor = 0.0000142233;
+            break;
+        case "Atmosphere":
+            conversionFactor = 0.00096784;
+            break;
+        case "Technical Atmosphere":
+            conversionFactor = 0.000999661;
+            break;
+        case "Millimeter of Mercury (Torr)":
+            conversionFactor = 0.0734986;
+            break;
+        case "Inch of Water":
+            conversionFactor = 0.0393701;
+            break;
+        // Add more cases for other units and their conversion factors
+    }
+    break;
+
+case "Inch of Water":
+    switch (selectedOutputUnit) {
+        case "Pascal":
+            conversionFactor = 249.088;
+            break;
+        case "Kilopascal":
+            conversionFactor = 0.249088;
+            break;
+        case "Megapascal":
+            conversionFactor = 0.000249088;
+            break;
+        case "Bar":
+            conversionFactor = 0.00249088;
+            break;
+        case "Millibar":
+            conversionFactor = 2.49088;
+            break;
+        case "Pound per Square Inch (psi)":
+            conversionFactor = 0.0360912;
+            break;
+        case "KSI":
+            conversionFactor = 0.0000360912;
+            break;
+        case "Atmosphere":
+            conversionFactor = 0.00245892;
+            break;
+        case "Technical Atmosphere":
+            conversionFactor = 0.0025396;
+            break;
+        case "Millimeter of Mercury (Torr)":
+            conversionFactor = 0.187457;
+            break;
+        case "Centimeter of Water":
+            conversionFactor = 2.540;
+            break;
+        // Add more cases for other units and their conversion factors
+    }
+    break;
+//Temprature
+case "Celsius":
+    switch (selectedOutputUnit) {
+        case "Fahrenheit":
+            result = (inputValue * 9/5) + 32;
+            break;
+        case "Kelvin":
+            result = inputValue + 273.15;
+            break;
+        // Add more cases for other output units
+    }
+    break;
+
+case "Fahrenheit":
+    switch (selectedOutputUnit) {
+        case "Celsius":
+            result = (inputValue - 32) * 5/9;
+            break;
+        case "Kelvin":
+            result = (inputValue + 459.67) * 5/9;
+            break;
+        // Add more cases for other output units
+    }
+    break;
+
+case "Kelvin":
+    switch (selectedOutputUnit) {
+        case "Celsius":
+            result = inputValue - 273.15;
+            break;
+        case "Fahrenheit":
+            result = (inputValue * 9/5) - 459.67;
+            break;
+        // Add more cases for other output units
+    }
+    break;
+//Time
+                case "Time":
+                    switch (selectedInputUnit) {
+                        case "Nanosecond":
+                            switch (selectedOutputUnit) {
+                                case "Microsecond":
+                                    conversionFactor = 0.001;
+                                    break;
+                                case "Millisecond":
+                                    conversionFactor = 0.000001;
+                                    break;
+                                case "Second":
+                                    conversionFactor = 0.000000001;
+                                    break;
+                                case "Minute":
+                                    conversionFactor = 0.0000000000166667;
+                                    break;
+                                case "Hour":
+                                    conversionFactor = 0.000000000000277778;
+                                    break;
+                                case "Day":
+                                    conversionFactor = 0.0000000000000115741;
+                                    break;
+                                case "Week":
+                                    conversionFactor = 0.0000000000000016534;
+                                    break;
+                                case "Month":
+                                    conversionFactor = 0.00000000000000038026;
+                                    break;
+                                case "Year":
+                                    conversionFactor = 0.000000000000000031688;
+                                    break;
+                                // Add more cases for other units and their conversion factors
+                            }
+                            break;
+                        case "Microsecond":
+                            switch (selectedOutputUnit) {
+                                case "Nanosecond":
+                                    conversionFactor = 1000;
+                                    break;
+                                case "Millisecond":
+                                    conversionFactor = 0.001;
+                                    break;
+                                case "Second":
+                                    conversionFactor = 0.000001;
+                                    break;
+                                case "Minute":
+                                    conversionFactor = 0.0000000166667;
+                                    break;
+                                case "Hour":
+                                    conversionFactor = 0.000000000277778;
+                                    break;
+                                case "Day":
+                                    conversionFactor = 0.0000000000115741;
+                                    break;
+                                case "Week":
+                                    conversionFactor = 0.0000000000016534;
+                                    break;
+                                case "Month":
+                                    conversionFactor = 0.00000000000038026;
+                                    break;
+                                case "Year":
+                                    conversionFactor = 0.000000000000031688;
+                                    break;
+                                // Add more cases for other units and their conversion factors
+                            }
+                            break;
+                        case "Millisecond":
+                            switch (selectedOutputUnit) {
+                                case "Nanosecond":
+                                    conversionFactor = 1000000;
+                                    break;
+                                case "Microsecond":
+                                    conversionFactor = 1000;
+                                    break;
+                                case "Second":
+                                    conversionFactor = 0.001;
+                                    break;
+                                case "Minute":
+                                    conversionFactor = 0.0000166667;
+                                    break;
+                                case "Hour":
+                                    conversionFactor = 0.000000277778;
+                                    break;
+                                case "Day":
+                                    conversionFactor = 0.0000000115741;
+                                    break;
+                                case "Week":
+                                    conversionFactor = 0.0000000016534;
+                                    break;
+                                case "Month":
+                                    conversionFactor = 0.00000000038026;
+                                    break;
+                                case "Year":
+                                    conversionFactor = 0.000000000031688;
+                                    break;
+                                // Add more cases for other units and their conversion factors
+                            }
+                            break;
+                        case "Second":
+                            switch (selectedOutputUnit) {
+                                case "Nanosecond":
+                                    conversionFactor = 1000000000;
+                                    break;
+                                case "Microsecond":
+                                    conversionFactor = 1000000;
+                                    break;
+                                case "Millisecond":
+                                    conversionFactor = 1000;
+                                    break;
+                                case "Minute":
+                                    conversionFactor = 0.0166667;
+                                    break;
+                                case "Hour":
+                                    conversionFactor = 0.000277778;
+                                    break;
+                                case "Day":
+                                    conversionFactor = 0.0000115741;
+                                    break;
+                                case "Week":
+                                    conversionFactor = 0.0000016534;
+                                    break;
+                                case "Month":
+                                    conversionFactor = 0.00000038026;
+                                    break;
+                                case "Year":
+                                    conversionFactor = 0.000000031688;
+                                    break;
+                                // Add more cases for other units and their conversion factors
+                            }
+                            break;
+                        case "Minute":
+                            switch (selectedOutputUnit) {
+                                case "Nanosecond":
+                                    conversionFactor = 60000000000;
+                                    break;
+                                case "Microsecond":
+                                    conversionFactor = 60000000;
+                                    break;
+                                case "Millisecond":
+                                    conversionFactor = 60000;
+                                    break;
+                                case "Second":
+                                    conversionFactor = 60;
+                                    break;
+                                case "Hour":
+                                    conversionFactor = 0.0166667;
+                                    break;
+                                case "Day":
+                                    conversionFactor = 0.000694444;
+                                    break;
+                                case "Week":
+                                    conversionFactor = 0.0000992063;
+                                    break;
+                                case "Month":
+                                    conversionFactor = 0.0000228154;
+                                    break;
+                                case "Year":
+                                    conversionFactor = 0.00000190132;
+                                    break;
+                                // Add more cases for other units and their conversion factors
+                            }
+                            break;
+                        case "Hour":
+                            switch (selectedOutputUnit) {
+                                case "Nanosecond":
+                                    conversionFactor = 3600000000000;
+                                    break;
+                                case "Microsecond":
+                                    conversionFactor = 3600000000;
+                                    break;
+                                case "Millisecond":
+                                    conversionFactor = 3600000;
+                                    break;
+                                case "Second":
+                                    conversionFactor = 3600;
+                                    break;
+                                case "Minute":
+                                    conversionFactor = 60;
+                                    break;
+                                case "Day":
+                                    conversionFactor = 0.0416667;
+                                    break;
+                                case "Week":
+                                    conversionFactor = 0.00595238;
+                                    break;
+                                case "Month":
+                                    conversionFactor = 0.00136986;
+                                    break;
+                                case "Year":
+                                    conversionFactor = 0.000114155;
+                                    break;
+                                // Add more cases for other units and their conversion factors
+                            }
+                            break;
+                        case "Day":
+                            switch (selectedOutputUnit) {
+                                case "Nanosecond":
+                                    conversionFactor = 86400000000000;
+                                    break;
+                                case "Microsecond":
+                                    conversionFactor = 86400000000;
+                                    break;
+                                case "Millisecond":
+                                    conversionFactor = 86400000;
+                                    break;
+                                case "Second":
+                                    conversionFactor = 86400;
+                                    break;
+                                case "Minute":
+                                    conversionFactor = 1440;
+                                    break;
+                                case "Hour":
+                                    conversionFactor = 24;
+                                    break;
+                                case "Week":
+                                    conversionFactor = 0.142857;
+                                    break;
+                                case "Month":
+                                    conversionFactor = 0.0328549;
+                                    break;
+                                case "Year":
+                                    conversionFactor = 0.00273791;
+                                    break;
+                                // Add more cases for other units and their conversion factors
+                            }
+                            break;
+                        case "Week":
+                            switch (selectedOutputUnit) {
+                                case "Nanosecond":
+                                    conversionFactor = 604800000000000;
+                                    break;
+                                case "Microsecond":
+                                    conversionFactor = 604800000000;
+                                    break;
+                                case "Millisecond":
+                                    conversionFactor = 604800000;
+                                    break;
+                                case "Second":
+                                    conversionFactor = 604800;
+                                    break;
+                                case "Minute":
+                                    conversionFactor = 10080;
+                                    break;
+                                case "Hour":
+                                    conversionFactor = 168;
+                                    break;
+                                case "Day":
+                                    conversionFactor = 7;
+                                    break;
+                                case "Month":
+                                    conversionFactor = 0.229984;
+                                    break;
+                                case "Year":
+                                    conversionFactor = 0.0191654;
+                                    break;
+                                // Add more cases for other units and their conversion factors
+                            }
+                            break;
+                        case "Month":
+                            switch (selectedOutputUnit) {
+                                case "Nanosecond":
+                                    conversionFactor = 2.628e+15;
+                                    break;
+                                case "Microsecond":
+                                    conversionFactor = 2.628e+12;
+                                    break;
+                                case "Millisecond":
+                                    conversionFactor = 2.628e+9;
+                                    break;
+                                case "Second":
+                                    conversionFactor = 2.628e+6;
+                                    break;
+                                case "Minute":
+                                    conversionFactor = 43800;
+                                    break;
+                                case "Hour":
+                                    conversionFactor = 730.001;
+                                    break;
+                                case "Day":
+                                    conversionFactor = 30.4167;
+                                    break;
+                                case "Week":
+                                    conversionFactor = 4.34524;
+                                    break;
+                                case "Year":
+                                    conversionFactor = 0.0833333;
+                                    break;
+                                // Add more cases for other units and their conversion factors
+                            }
+                            break;
+                        case "Year":
+                            switch (selectedOutputUnit) {
+                                case "Nanosecond":
+                                    conversionFactor = 3.154e+16;
+                                    break;
+                                case "Microsecond":
+                                    conversionFactor = 3.154e+13;
+                                    break;
+                                case "Millisecond":
+                                    conversionFactor = 3.154e+10;
+                                    break;
+                                case "Second":
+                                    conversionFactor = 3.154e+7;
+                                    break;
+                                case "Minute":
+                                    conversionFactor = 525600;
+                                    break;
+                                case "Hour":
+                                    conversionFactor = 8760;
+                                    break;
+                                case "Day":
+                                    conversionFactor = 365;
+                                    break;
+                                case "Week":
+                                    conversionFactor = 52.1429;
+                                    break;
+                                case "Month":
+                                    conversionFactor = 12;
+                                    break;
+                                // Add more cases for other units and their conversion factors
+                            }
+                            break;
+                        // Add cases for other input units
+                    }
+                    break;
+                // Add cases for other categories
+                //Volume
+                case "Cubic Meter":
+    switch (selectedOutputUnit) {
+        case "Cubic Kilometer":
+            conversionFactor = 0.000000000001;
+            break;
+        case "Cubic Centimeter":
+            conversionFactor = 1000000;
+            break;
+        case "Cubic Millimeter":
+            conversionFactor = 1000000000;
+            break;
+        case "Liter":
+            conversionFactor = 1000;
+            break;
+        case "Milliliter":
+            conversionFactor = 1000000;
+            break;
+        case "US Gallon":
+            conversionFactor = 264.172;
+            break;
+        case "US Quart":
+            conversionFactor = 1056.69;
+            break;
+        case "US Pint":
+            conversionFactor = 2113.38;
+            break;
+        case "US Cup":
+            conversionFactor = 4166.67;
+            break;
+        case "US Fluid Ounce":
+            conversionFactor = 33814;
+            break;
+        case "US Tablespoon":
+            conversionFactor = 67628;
+            break;
+        case "US Teaspoon":
+            conversionFactor = 202884;
+            break;
+        case "Cubic Foot":
+            conversionFactor = 35.3147;
+            break;
+        case "Cubic Inch":
+            conversionFactor = 61023.7;
+            break;
+        // Add more cases for other units and their conversion factors
+    }
+    break;
+
+case "Cubic Kilometer":
+    switch (selectedOutputUnit) {
+        case "Cubic Meter":
+            conversionFactor = 1000000000000;
+            break;
+        case "Cubic Centimeter":
+            conversionFactor = 1000000000000000000;
+            break;
+        case "Cubic Millimeter":
+            conversionFactor = 1000000000000000000000;
+            break;
+        case "Liter":
+            conversionFactor = 1000000000000000;
+            break;
+        case "Milliliter":
+            conversionFactor = 1000000000000000000;
+            break;
+        case "US Gallon":
+            conversionFactor = 264172052358.15;
+            break;
+        case "US Quart":
+            conversionFactor = 1056688209432.61;
+            break;
+        case "US Pint":
+            conversionFactor = 2113376418865.22;
+            break;
+        case "US Cup":
+            conversionFactor = 4226752837729.50;
+            break;
+        case "US Fluid Ounce":
+            conversionFactor = 33814022701836.00;
+            break;
+        case "US Tablespoon":
+            conversionFactor = 67628045403672.00;
+            break;
+        case "US Teaspoon":
+            conversionFactor = 202884136211016.00;
+            break;
+        case "Cubic Foot":
+            conversionFactor = 35314666721.29;
+            break;
+        case "Cubic Inch":
+            conversionFactor = 61023744094799.96;
+            break;
+        // Add more cases for other units and their conversion factors
+    }
+    break;
+
+case "Cubic Centimeter":
+    switch (selectedOutputUnit) {
+        case "Cubic Meter":
+            conversionFactor = 0.000001;
+            break;
+        case "Cubic Kilometer":
+            conversionFactor = 0.000000000000001;
+            break;
+        case "Cubic Millimeter":
+            conversionFactor = 1000;
+            break;
+        case "Liter":
+            conversionFactor = 0.001;
+            break;
+        case "Milliliter":
+            conversionFactor = 1;
+            break;
+        case "US Gallon":
+            conversionFactor = 0.000264172;
+            break;
+        case "US Quart":
+            conversionFactor = 0.00105669;
+            break;
+        case "US Pint":
+            conversionFactor = 0.00211338;
+            break;
+        case "US Cup":
+            conversionFactor = 0.00416667;
+            break;
+        case "US Fluid Ounce":
+            conversionFactor = 0.033814;
+            break;
+        case "US Tablespoon":
+            conversionFactor = 0.067628;
+            break;
+        case "US Teaspoon":
+            conversionFactor = 0.202884;
+            break;
+        case "Cubic Foot":
+            conversionFactor = 0.0000353147;
+            break;
+        case "Cubic Inch":
+            conversionFactor = 0.0610237;
+            break;
+        // Add more cases for other units and their conversion factors
+    }
+    break;
+
+case "Cubic Millimeter":
+    switch (selectedOutputUnit) {
+        case "Cubic Meter":
+            conversionFactor = 0.000000001;
+            break;
+        case "Cubic Kilometer":
+            conversionFactor = 0.000000000000000001;
+            break;
+        case "Cubic Centimeter":
+            conversionFactor = 0.001;
+            break;
+        case "Liter":
+            conversionFactor = 0.000001;
+            break;
+        case "Milliliter":
+            conversionFactor = 0.001;
+            break;
+        case "US Gallon":
+            conversionFactor = 0.000000264172;
+            break;
+        case "US Quart":
+            conversionFactor = 0.00000105669;
+            break;
+        case "US Pint":
+            conversionFactor = 0.00000211338;
+            break;
+        case "US Cup":
+            conversionFactor = 0.00000416667;
+            break;
+        case "US Fluid Ounce":
+            conversionFactor = 0.000033814;
+            break;
+        case "US Tablespoon":
+            conversionFactor = 0.000067628;
+            break;
+        case "US Teaspoon":
+            conversionFactor = 0.000202884;
+            break;
+        case "Cubic Foot":
+            conversionFactor = 0.0000000353147;
+            break;
+        case "Cubic Inch":
+            conversionFactor = 0.0000610237;
+            break;
+        // Add more cases for other units and their conversion factors
+    }
+    break;
+
+case "Liter":
+    switch (selectedOutputUnit) {
+        case "Cubic Meter":
+            conversionFactor = 0.001;
+            break;
+        case "Cubic Kilometer":
+            conversionFactor = 0.000000000001;
+            break;
+        case "Cubic Centimeter":
+            conversionFactor = 1000;
+            break;
+        case "Cubic Millimeter":
+            conversionFactor = 1000000;
+            break;
+        case "Milliliter":
+            conversionFactor = 1000;
+            break;
+        case "US Gallon":
+            conversionFactor = 0.264172;
+            break;
+        case "US Quart":
+            conversionFactor = 1.05669;
+            break;
+        case "US Pint":
+            conversionFactor = 2.11338;
+            break;
+        case "US Cup":
+            conversionFactor = 4.16667;
+            break;
+        case "US Fluid Ounce":
+            conversionFactor = 33.814;
+            break;
+        case "US Tablespoon":
+            conversionFactor = 67.628;
+            break;
+        case "US Teaspoon":
+            conversionFactor = 202.884;
+            break;
+        case "Cubic Foot":
+            conversionFactor = 0.0353147;
+            break;
+        case "Cubic Inch":
+            conversionFactor = 61.0237;
+            break;
+        // Add more cases for other units and their conversion factors
+    }
+    break;
+
+case "Milliliter":
+    switch (selectedOutputUnit) {
+        case "Cubic Meter":
+            conversionFactor = 0.000001;
+            break;
+        case "Cubic Kilometer":
+            conversionFactor = 0.000000000000001;
+            break;
+        case "Cubic Centimeter":
+            conversionFactor = 1;
+            break;
+        case "Cubic Millimeter":
+            conversionFactor = 1000;
+            break;
+        case "Liter":
+            conversionFactor = 0.001;
+            break;
+        case "US Gallon":
+            conversionFactor = 0.000264172;
+            break;
+        case "US Quart":
+            conversionFactor = 0.00105669;
+            break;
+        case "US Pint":
+            conversionFactor = 0.00211338;
+            break;
+        case "US Cup":
+            conversionFactor = 0.00416667;
+            break;
+        case "US Fluid Ounce":
+            conversionFactor = 0.033814;
+            break;
+        case "US Tablespoon":
+            conversionFactor = 0.067628;
+            break;
+        case "US Teaspoon":
+            conversionFactor = 0.202884;
+            break;
+        case "Cubic Foot":
+            conversionFactor = 0.0000353147;
+            break;
+        case "Cubic Inch":
+            conversionFactor = 0.0610237;
+            break;
+        // Add more cases for other units and their conversion factors
+    }
+    break;
+
+case "US Gallon":
+    switch (selectedOutputUnit) {
+        case "Cubic Meter":
+            conversionFactor = 0.00378541;
+            break;
+        case "Cubic Kilometer":
+            conversionFactor = 0.00000000378541;
+            break;
+        case "Cubic Centimeter":
+            conversionFactor = 3785.41;
+            break;
+        case "Cubic Millimeter":
+            conversionFactor = 3785410;
+            break;
+        case "Liter":
+            conversionFactor = 3.78541;
+            break;
+        case "Milliliter":
+            conversionFactor = 3785.41;
+            break;
+        case "US Quart":
+            conversionFactor = 4;
+            break;
+        case "US Pint":
+            conversionFactor = 8;
+            break;
+        case "US Cup":
+            conversionFactor = 16;
+            break;
+        case "US Fluid Ounce":
+            conversionFactor = 128;
+            break;
+        case "US Tablespoon":
+            conversionFactor = 256;
+            break;
+        case "US Teaspoon":
+            conversionFactor = 768;
+            break;
+        case "Cubic Foot":
+            conversionFactor = 0.133681;
+            break;
+        case "Cubic Inch":
+            conversionFactor = 231;
+            break;
+        // Add more cases for other units and their conversion factors
+    }
+    break;
+
+case "US Quart":
+    switch (selectedOutputUnit) {
+        case "Cubic Meter":
+            conversionFactor = 0.000946353;
+            break;
+        case "Cubic Kilometer":
+            conversionFactor = 0.000000000946353;
+            break;
+        case "Cubic Centimeter":
+            conversionFactor = 946.353;
+            break;
+        case "Cubic Millimeter":
+            conversionFactor = 946353;
+            break;
+        case "Liter":
+            conversionFactor = 0.946353;
+            break;
+        case "Milliliter":
+            conversionFactor = 946.353;
+            break;
+        case "US Gallon":
+            conversionFactor = 0.25;
+            break;
+        case "US Pint":
+            conversionFactor = 2;
+            break;
+        case "US Cup":
+            conversionFactor = 4;
+            break;
+        case "US Fluid Ounce":
+            conversionFactor = 32;
+            break;
+        case "US Tablespoon":
+            conversionFactor = 64;
+            break;
+        case "US Teaspoon":
+            conversionFactor = 192;
+            break;
+        case "Cubic Foot":
+            conversionFactor = 0.0334201;
+            break;
+        case "Cubic Inch":
+            conversionFactor = 57.75;
+            break;
+        // Add more cases for other units and their conversion factors
+    }
+    break;
+
+case "US Pint":
+    switch (selectedOutputUnit) {
+        case "Cubic Meter":
+            conversionFactor = 0.000473176;
+            break;
+        case "Cubic Kilometer":
+            conversionFactor = 0.000000000473176;
+            break;
+        case "Cubic Centimeter":
+            conversionFactor = 473.176;
+            break;
+        case "Cubic Millimeter":
+            conversionFactor = 473176;
+            break;
+        case "Liter":
+            conversionFactor = 0.473176;
+            break;
+        case "Milliliter":
+            conversionFactor = 473.176;
+            break;
+        case "US Gallon":
+            conversionFactor = 0.125;
+            break;
+        case "US Quart":
+            conversionFactor = 0.5;
+            break;
+        case "US Cup":
+            conversionFactor = 2;
+            break;
+        case "US Fluid Ounce":
+            conversionFactor = 16;
+            break;
+        case "US Tablespoon":
+            conversionFactor = 32;
+            break;
+        case "US Teaspoon":
+            conversionFactor = 96;
+            break;
+        case "Cubic Foot":
+            conversionFactor = 0.0167101;
+            break;
+        case "Cubic Inch":
+            conversionFactor = 28.875;
+            break;
+        // Add more cases for other units and their conversion factors
+    }
+    break;
+
+case "US Cup":
+    switch (selectedOutputUnit) {
+        case "Cubic Meter":
+            conversionFactor = 0.000236588;
+            break;
+        case "Cubic Kilometer":
+            conversionFactor = 0.000000000236588;
+            break;
+        case "Cubic Centimeter":
+            conversionFactor = 236.588;
+            break;
+        case "Cubic Millimeter":
+            conversionFactor = 236588;
+            break;
+        case "Liter":
+            conversionFactor = 0.236588;
+            break;
+        case "Milliliter":
+            conversionFactor = 236.588;
+            break;
+        case "US Gallon":
+            conversionFactor = 0.0625;
+            break;
+        case "US Quart":
+            conversionFactor = 0.25;
+            break;
+        case "US Pint":
+            conversionFactor = 0.5;
+            break;
+        case "US Fluid Ounce":
+            conversionFactor = 8;
+            break;
+        case "US Tablespoon":
+            conversionFactor = 16;
+            break;
+        case "US Teaspoon":
+            conversionFactor = 48;
+            break;
+        case "Cubic Foot":
+            conversionFactor = 0.00835503;
+            break;
+        case "Cubic Inch":
+            conversionFactor = 14.4375;
+            break;
+        // Add more cases for other units and their conversion factors
+    }
+    break;
+
+case "US Fluid Ounce":
+    switch (selectedOutputUnit) {
+        case "Cubic Meter":
+            conversionFactor = 0.0000295735;
+            break;
+        case "Cubic Kilometer":
+            conversionFactor = 0.0000000000295735;
+            break;
+        case "Cubic Centimeter":
+            conversionFactor = 29.5735;
+            break;
+        case "Cubic Millimeter":
+            conversionFactor = 29573.5;
+            break;
+        case "Liter":
+            conversionFactor = 0.0295735;
+            break;
+        case "Milliliter":
+            conversionFactor = 29.5735;
+            break;
+        case "US Gallon":
+            conversionFactor = 0.0078125;
+            break;
+        case "US Quart":
+            conversionFactor = 0.03125;
+            break;
+        case "US Pint":
+            conversionFactor = 0.0625;
+            break;
+        case "US Cup":
+            conversionFactor = 0.125;
+            break;
+        case "US Tablespoon":
+            conversionFactor = 2;
+            break;
+        case "US Teaspoon":
+            conversionFactor = 6;
+            break;
+        case "Cubic Foot":
+            conversionFactor = 0.00104438;
+            break;
+        case "Cubic Inch":
+            conversionFactor = 1.80469;
+            break;
+        // Add more cases for other units and their conversion factors
+    }
+    break;
+
+case "US Tablespoon":
+    switch (selectedOutputUnit) {
+        case "Cubic Meter":
+            conversionFactor = 0.0000147868;
+            break;
+        case "Cubic Kilometer":
+            conversionFactor = 0.0000000000147868;
+            break;
+        case "Cubic Centimeter":
+            conversionFactor = 14.7868;
+            break;
+        case "Cubic Millimeter":
+            conversionFactor = 14786.8;
+            break;
+        case "Liter":
+            conversionFactor = 0.0147868;
+            break;
+        case "Milliliter":
+            conversionFactor = 14.7868;
+            break;
+        case "US Gallon":
+            conversionFactor = 0.00390625;
+            break;
+        case "US Quart":
+            conversionFactor = 0.015625;
+            break;
+        case "US Pint":
+            conversionFactor = 0.03125;
+            break;
+        case "US Cup":
+            conversionFactor = 0.0625;
+            break;
+        case "US Fluid Ounce":
+            conversionFactor = 0.5;
+            break;
+        case "US Teaspoon":
+            conversionFactor = 3;
+            break;
+        case "Cubic Foot":
+            conversionFactor = 0.00052219;
+            break;
+        case "Cubic Inch":
+            conversionFactor = 0.902344;
+            break;
+        // Add more cases for other units and their conversion factors
+    }
+    break;
+
+case "US Teaspoon":
+    switch (selectedOutputUnit) {
+        case "Cubic Meter":
+            conversionFactor = 0.00000492892;
+            break;
+        case "Cubic Kilometer":
+            conversionFactor = 0.00000000000492892;
+            break;
+        case "Cubic Centimeter":
+            conversionFactor = 4.92892;
+            break;
+        case "Cubic Millimeter":
+            conversionFactor = 4928.92;
+            break;
+        case "Liter":
+            conversionFactor = 0.00492892;
+            break;
+        case "Milliliter":
+            conversionFactor = 4.92892;
+            break;
+        case "US Gallon":
+            conversionFactor = 0.00130208;
+            break;
+        case "US Quart":
+            conversionFactor = 0.00520833;
+            break;
+        case "US Pint":
+            conversionFactor = 0.0104167;
+            break;
+        case "US Cup":
+            conversionFactor = 0.0208333;
+            break;
+        case "US Fluid Ounce":
+            conversionFactor = 0.166667;
+            break;
+        case "US Tablespoon":
+            conversionFactor = 0.333333;
+            break;
+        case "Cubic Foot":
+            conversionFactor = 0.000174063;
+            break;
+        case "Cubic Inch":
+            conversionFactor = 0.300781;
+            break;
+        // Add more cases for other units and their conversion factors
+    }
+    break;
+
+case "Cubic Foot":
+    switch (selectedOutputUnit) {
+        case "Cubic Meter":
+            conversionFactor = 0.0283168;
+            break;
+        case "Cubic Kilometer":
+            conversionFactor = 0.0000000283168;
+            break;
+        case "Cubic Centimeter":
+            conversionFactor = 28316.8;
+            break;
+        case "Cubic Millimeter":
+            conversionFactor = 28316800;
+            break;
+        case "Liter":
+            conversionFactor = 28.3168;
+            break;
+        case "Milliliter":
+            conversionFactor = 28316.8;
+            break;
+        case "US Gallon":
+            conversionFactor = 7.48052;
+            break;
+        case "US Quart":
+            conversionFactor = 29.9221;
+            break;
+        case "US Pint":
+            conversionFactor = 59.8442;
+            break;
+        case "US Cup":
+            conversionFactor = 119.688;
+            break;
+        case "US Fluid Ounce":
+            conversionFactor = 957.506;
+            break;
+        case "US Tablespoon":
+            conversionFactor = 1915.01;
+            break;
+        case "US Teaspoon":
+            conversionFactor = 5745.04;
+            break;
+        case "Cubic Inch":
+            conversionFactor = 1728;
+            break;
+        // Add more cases for other units and their conversion factors
+    }
+    break;
+
+case "Cubic Inch":
+    switch (selectedOutputUnit) {
+        case "Cubic Meter":
+            conversionFactor = 0.0000163871;
+            break;
+        case "Cubic Kilometer":
+            conversionFactor = 0.0000000000163871;
+            break;
+        case "Cubic Centimeter":
+            conversionFactor = 16.3871;
+            break;
+        case "Cubic Millimeter":
+            conversionFactor = 16387.1;
+            break;
+        case "Liter":
+            conversionFactor = 0.0163871;
+            break;
+        case "Milliliter":
+            conversionFactor = 16.3871;
+            break;
+        case "US Gallon":
+            conversionFactor = 0.004329;
+            break;
+        case "US Quart":
+            conversionFactor = 0.017316;
+            break;
+        case "US Pint":
+            conversionFactor = 0.034632;
+            break;
+        case "US Cup":
+            conversionFactor = 0.069264;
+            break;
+        case "US Fluid Ounce":
+            conversionFactor = 0.554113;
+            break;
+        case "US Tablespoon":
+            conversionFactor = 1.10823;
+            break;
+        case "US Teaspoon":
+            conversionFactor = 3.32468;
+            break;
+        case "Cubic Foot":
+            conversionFactor = 0.000578704;
+            break;
+        // Add more cases for other units and their conversion factors
+    }
+    break;
+
+            }
+
+
+            var result = inputValue * conversionFactor;
+            outputValue.value = result.toFixed(10);
+            formulaValueDiv.textContent = formula.replace("conversion factor", conversionFactor);
+        }
+
+        updateUnits();
+    </script>
+}
