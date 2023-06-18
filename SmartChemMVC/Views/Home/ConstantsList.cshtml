@@ -1,6 +1,64 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
+    <style>
+        .calculator-box {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .calculator-section {
+            width: calc(50% - 10px);
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input, select {
+            padding: 5px;
+            margin-bottom: 10px;
+            width: 200px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+            button:hover {
+                background-color: #45a049;
+            }
+
+        .calculator-section {
+            margin-bottom: 30px;
+        }
+
+        .result-section {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f2f2f2;
+        }
+    </style>
 
     <script>
         function showConstant() {
@@ -62,70 +120,120 @@
             result = (m1 * v1) / (m2 * v2);
             document.getElementById('dilution-result').innerHTML = result;
         }
+
+        function calculateMolarity() {
+            var elementName = document.getElementById("element-name").value;
+            var molarMass = parseFloat(document.getElementById("molar-mass").value);
+            var volume = parseFloat(document.getElementById("molarity-volume").value);
+
+            var result;
+            result = molarMass / volume;
+            document.getElementById('molarity-result').innerHTML = result + " mol/liter";
+        }
     </script>
 </head>
 <body>
-    <h1>Constants in Chemistry and Physics</h1>
-    <select id="constantsList" onchange="showConstant()">
-        <option value="Avogadro constant">Avogadro constant</option>
-        <option value="Boltzmann constant">Boltzmann constant</option>
-        <option value="Planck's constant">Planck's constant</option>
-        <option value="Speed of light">Speed of light</option>
-        <option value="Elementary charge">Elementary charge</option>
-        <option value="Coulomb constant">Coulomb constant</option>
-        <option value="Magnetic constant">Magnetic constant</option>
-        <option value="Faraday constant">Faraday constant</option>
-        <option value="Rydberg constant">Rydberg constant</option>
-    </select>
-    <p>Selected constant value: <span id="constant-value"></span></p>
-    <h1>Density Calculator</h1>
-    <div>
-        <label for="mass-input">Mass:</label>
-        <input type="number" id="mass-input" placeholder="Enter mass" />
-        <select id="mass-unit">
-            <option value="kg">kg</option>
-            <option value="g">g</option>
-            <option value="tonne">tonne</option>
-        </select>
+    <div class="calculator-box">
+        <div class="calculator-section">
+            <h1>Constants in Chemistry and Physics</h1>
+
+            <select id="constantsList" onchange="showConstant()">
+                <option value="Avogadro constant">Avogadro constant</option>
+                <option value="Boltzmann constant">Boltzmann constant</option>
+                <option value="Planck's constant">Planck's constant</option>
+                <option value="Speed of light">Speed of light</option>
+                <option value="Elementary charge">Elementary charge</option>
+                <option value="Coulomb constant">Coulomb constant</option>
+                <option value="Magnetic constant">Magnetic constant</option>
+                <option value="Faraday constant">Faraday constant</option>
+                <option value="Rydberg constant">Rydberg constant</option>
+            </select>
+            <div class="result-section">
+                <p>Selected constant value: <span style="font-weight: bold" id="constant-value"></span></p>
+            </div>
+        </div>
+
+        <div class="calculator-section">
+            <h1>Density Calculator</h1>
+            <div>
+                <label for="mass-input">Mass:</label>
+                <input type="number" id="mass-input" placeholder="Enter mass" />
+                <select id="mass-unit">
+                    <option value="kg">kg</option>
+                    <option value="g">g</option>
+                    <option value="tonne">tonne</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="volume-input">Volume:</label>
+                <input type="number" id="volume-input" placeholder="Enter volume" />
+                <select id="volume-unit">
+                    <option value="m^3">m^3</option>
+                    <option value="cm^3">cm^3</option>
+                    <option value="ml^3">ml^3</option>
+                </select>
+            </div>
+
+            <button onclick="calculate()">Calculate</button>
+
+            <div class="result-section">
+                <p>Result: <span style="font-weight: bold"  id="result"></span></p>
+            </div>
+        </div>
+
+        <div class="calculator-section">
+            <h1>Dilution Calculator</h1>
+            <div>
+                <label for="m1-input">Initial Concentration (m1):</label>
+                <input type="number" id="m1-input" placeholder="Enter initial concentration" />
+            </div>
+
+            <div>
+                <label for="v1-input">Initial Volume (v1):</label>
+                <input type="number" id="v1-input" placeholder="Enter initial volume" />
+            </div>
+
+            <div>
+                <label for="m2-input">Final Concentration (m2):</label>
+                <input type="number" id="m2-input" placeholder="Enter final concentration" />
+            </div>
+
+            <div>
+                <label for="v2-input">Final Volume (v2):</label>
+                <input type="number" id="v2-input" placeholder="Enter final volume" />
+            </div>
+
+            <button onclick="calculateDilution()">Calculate Dilution</button>
+
+            <div class="result-section">
+                <p>Dilution Result: <span style="font-weight: bold" id="dilution-result"></span></p>
+            </div>
+        </div>
+
+        <div class="calculator-section">
+            <h1>Molarity Calculator</h1>
+            <div>
+                <label for="element-name">Element Name:</label>
+                <input type="text" id="element-name" placeholder="Enter element name" />
+            </div>
+
+            <div>
+                <label for="molar-mass">Molar Mass:</label>
+                <input type="number" id="molar-mass" placeholder="Enter molar mass" />
+            </div>
+
+            <div>
+                <label for="molarity-volume">Volume (in liters):</label>
+                <input type="number" id="molarity-volume" placeholder="Enter volume" />
+            </div>
+
+            <button onclick="calculateMolarity()">Calculate Molarity</button>
+
+            <div class="result-section">
+                <p>Molarity Result: <span style="font-weight: bold" id="molarity-result"></span></p>
+            </div>
+        </div>
     </div>
-
-    <div>
-        <label for="volume-input">Volume:</label>
-        <input type="number" id="volume-input" placeholder="Enter volume" />
-        <select id="volume-unit">
-            <option value="m^3">m^3</option>
-            <option value="cm^3">cm^3</option>
-            <option value="ml^3">ml^3</option>
-        </select>
-    </div>
-
-    <button onclick="calculate()">Calculate</button>
-
-    <p>Result: <span id="result"></span></p>
-
-    <h1>Dilution Calculator</h1>
-    <div>
-        <label for="m1-input">Initial Concentration (m1):</label>
-        <input type="number" id="m1-input" placeholder="Enter initial concentration" />
-    </div>
-
-    <div>
-        <label for="v1-input">Initial Volume (v1):</label>
-        <input type="number" id="v1-input" placeholder="Enter initial volume" />
-    </div>
-
-    <div>
-        <label for="m2-input">Final Concentration (m2):</label>
-        <input type="number" id="m2-input" placeholder="Enter final concentration" />
-    </div>
-
-    <div>
-        <label for="v2-input">Final Volume (v2):</label>
-        <input type="number" id="v2-input" placeholder="Enter final volume" />
-    </div>
-
-    <button onclick="calculateDilution()">Calculate Dilution</button>
-
-    <p>Dilution Result: <span id="dilution-result"></span></p>
 </body>
 </html>
