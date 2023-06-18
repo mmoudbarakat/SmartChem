@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <title>Constants in Chemistry and Physics</title>
+
     <script>
         function showConstant() {
             var constant = document.getElementById("constantsList").value;
@@ -40,9 +40,31 @@
             }
             document.getElementById('constant-value').innerHTML = constantValue;
         }
+
+        function calculate() {
+            var massValue = parseFloat(document.getElementById("mass-input").value);
+            var volumeValue = parseFloat(document.getElementById("volume-input").value);
+            var massUnit = document.getElementById("mass-unit").value;
+            var volumeUnit = document.getElementById("volume-unit").value;
+
+            var result;
+            result = massValue / volumeValue;
+            document.getElementById('result').innerHTML = result + massUnit + "/" + volumeUnit;
+        }
+
+        function calculateDilution() {
+            var m1 = parseFloat(document.getElementById("m1-input").value);
+            var v1 = parseFloat(document.getElementById("v1-input").value);
+            var m2 = parseFloat(document.getElementById("m2-input").value);
+            var v2 = parseFloat(document.getElementById("v2-input").value);
+
+            var result;
+            result = (m1 * v1) / (m2 * v2);
+            document.getElementById('dilution-result').innerHTML = result;
+        }
     </script>
 </head>
-<body >
+<body>
     <h1>Constants in Chemistry and Physics</h1>
     <select id="constantsList" onchange="showConstant()">
         <option value="Avogadro constant">Avogadro constant</option>
@@ -56,5 +78,54 @@
         <option value="Rydberg constant">Rydberg constant</option>
     </select>
     <p>Selected constant value: <span id="constant-value"></span></p>
+    <h1>Density Calculator</h1>
+    <div>
+        <label for="mass-input">Mass:</label>
+        <input type="number" id="mass-input" placeholder="Enter mass" />
+        <select id="mass-unit">
+            <option value="kg">kg</option>
+            <option value="g">g</option>
+            <option value="tonne">tonne</option>
+        </select>
+    </div>
+
+    <div>
+        <label for="volume-input">Volume:</label>
+        <input type="number" id="volume-input" placeholder="Enter volume" />
+        <select id="volume-unit">
+            <option value="m^3">m^3</option>
+            <option value="cm^3">cm^3</option>
+            <option value="ml^3">ml^3</option>
+        </select>
+    </div>
+
+    <button onclick="calculate()">Calculate</button>
+
+    <p>Result: <span id="result"></span></p>
+
+    <h1>Dilution Calculator</h1>
+    <div>
+        <label for="m1-input">Initial Concentration (m1):</label>
+        <input type="number" id="m1-input" placeholder="Enter initial concentration" />
+    </div>
+
+    <div>
+        <label for="v1-input">Initial Volume (v1):</label>
+        <input type="number" id="v1-input" placeholder="Enter initial volume" />
+    </div>
+
+    <div>
+        <label for="m2-input">Final Concentration (m2):</label>
+        <input type="number" id="m2-input" placeholder="Enter final concentration" />
+    </div>
+
+    <div>
+        <label for="v2-input">Final Volume (v2):</label>
+        <input type="number" id="v2-input" placeholder="Enter final volume" />
+    </div>
+
+    <button onclick="calculateDilution()">Calculate Dilution</button>
+
+    <p>Dilution Result: <span id="dilution-result"></span></p>
 </body>
 </html>
