@@ -3,7 +3,7 @@
 
 @inject SignInManager<SmartChemMVCUser> SignInManager
 @inject UserManager<SmartChemMVCUser> UserManager
-
+@*
 <ul class="navbar-nav">
 @if (SignInManager.IsSignedIn(User))
 {
@@ -25,4 +25,4 @@ else
         <a class="nav-link text-dark" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
     </li>
 }
-</ul>
+</ul>*@
