@@ -4,7 +4,7 @@
 
 @using (Html.BeginForm("FindElement", "Element", FormMethod.Post))
 {
-    <label for="name">Element Name:</label>
+    <label  class="f-elemnt"  for="name">Element Name:</label>
     <input type="text" id="name" name="name" />
     <button type="submit">Search</button>
 }
@@ -16,3 +16,21 @@
     <p>Atomic Mass: @Model.AtomicMass</p>
 }
 
+<style>
+
+    h1{
+
+        text-align:center;
+        margin-bottom:25px;
+
+    }
+
+    form{
+        display: flex;
+        margin:30px;
+        justify-content: center;
+        align-items: center;
+    }
+
+
+</style>

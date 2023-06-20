@@ -5,54 +5,197 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <h1>Chemical Equipment Gallery</h1>
-    <div class="gallery">
-      <div class="gallery-item">
-        <img src="~/pictures/Distillation Apparatus.jpg" alt="Distillation Apparatus">
-        <div class="gallery-item-name">Distillation Apparatus</div>
-      </div>
-      <div class="gallery-item">
-        <img src="~/pictures/Bunsen Burner.jpg" alt="Bunsen Burner">
-        <div class="gallery-item-name">Bunsen Burner</div>
-      </div>
-      <div class="gallery-item">
-        <img src="~/pictures/Erlenmeyer Flask.jpg" alt="Erlenmeyer Flask">
-        <div class="gallery-item-name">Erlenmeyer Flask</div>
-      </div>
-      <div class="gallery-item">
-        <img src="~/pictures/beaker.jpg" alt="Beaker">
-        <div class="gallery-item-name">Beaker</div>
-      </div>
-      <div class="gallery-item">
-        <img src="~/pictures/Hotplate Stirrer.png" alt="Magnetic Stirrer">
-        <div class="gallery-item-name">Magnetic Stirrer</div>
-      </div>
+
+    <h1>Tools Gallery</h1>
+    
+    <div class="lightbox">
+        <div class="wrapper">
+            <header>
+                <div class="details">
+                    <i class="fa-solid fa-microscope fa-2xl p-1 fa-beat" style="color: #5e12ba;"></i>
+                    
+                    <span>Tools</span>
+                </div>
+                <div class="buttons"><i class=" close-icon fa-solid fa-xmark fa-2xl"></i></div>
+            </header>
+            <div class="preview-img">
+                <div class="img"><img src="" alt="preview-img"></div>
+            </div>
+        </div>
     </div>
-  </body>
+    <section class="gallery">
+        <ul class="images">
+
+            <li class="img"><img src="~/pictures/tools/beaker.jpg" /></li>
+            <li class="img"><img src="~/pictures/tools/bunsen burner.jpg" /></li>
+            <li class="img"><img src="~/pictures/tools/hotplate stirrer.png" /></li>
+            <li class="img"><img src="~/pictures/tools/erlenmeyer flask.jpg" /></li>
+            <li class="img"><img src="~/pictures/tools/test tube holder.jpeg" /></li>
+            <li class="img"><img src="~/pictures/tools/thermal gravimetric analyzer (tga).jpeg" /></li>
+
+
+            
+          
+        </ul>
+    </section>
+
+</body>
 </html>
 
 
 <style>
-       .gallery {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-}
+    h1 {
+        text-align: center;
+        margin-top: 50px;
+    }
+    /* Masonry image gallery styling */
+    .gallery {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
 
-.gallery-item {
-  margin: 10px;
-  text-align: center;
-}
+        .gallery .images {
+            gap: 15px;
+            max-width: 85%;
+            margin: 40px 0;
+            columns: 5 310px;
+            list-style: none;
+        }
 
-.gallery-item img {
-  width: 150px;
-  height: 150px;
-}
+            .gallery .images .img {
+                display: flex;
+                cursor: pointer;
+                overflow: hidden;
+                position: relative;
+                margin-bottom: 14px;
+                border-radius: 4px;
+            }
 
-.gallery-item-name {
-  margin-top: 5px;
-  font-weight: bold;
-}
+            .gallery .images img {
+                width: 100%;
+                transition: transform 0.2s ease;
+            }
+
+            .gallery .images .img:hover img {
+                transform: scale(1.1);
+            }
+
+    /* Image lightbox styling */
+    .lightbox {
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 5;
+        position: fixed;
+        visibility: hidden;
+        background: rgba(0,0,0,0.65);
+    }
+
+        .lightbox.show {
+            visibility: visible;
+        }
+
+        .lightbox .wrapper {
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            width: 100%;
+            padding: 20px;
+            max-width: 850px;
+            background: #fff;
+            border-radius: 6px;
+            opacity: 0;
+            pointer-events: none;
+            transform: translate(-50%, -50%) scale(0.9);
+            transition: transform 0.1s ease;
+        }
+
+        .lightbox.show .wrapper {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+    .wrapper :where(header, .details) {
+        display: flex;
+        align-items: center;
+    }
+
+    .wrapper header {
+        justify-content: space-between;
+    }
+
+    header .details i {
+        font-size: 1.7rem;
+    }
+
+    header .details span {
+        font-size: 1.2rem;
+        margin-left: 10px;
+    }
+
+    header .buttons i {
+        height: 40px;
+        width: 40px;
+        cursor: pointer;
+        display: inline-block;
+        color: #fff;
+        margin-left: 10px;
+        background: #4008b9;
+        font-size: 1.25rem;
+        line-height: 40px;
+        text-align: center;
+        border-radius: 4px;
+        transition: 0.2s ease;
+    }
+
+        header .buttons i:hover {
+            background: #3a0491;
+        }
+
+    .wrapper .preview-img {
+        display: flex;
+        justify-content: center;
+        margin-top: 25px;
+    }
+
+    .preview-img .img {
+        max-height: 65vh;
+    }
+
+    .preview-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
 
 </style>
    
+  <script>
+
+    const allImages = document.querySelectorAll(".images .img");
+    const lightbox = document.querySelector(".lightbox");
+    const closeImgBtn = lightbox.querySelector(".close-icon");
+
+    allImages.forEach(img => {
+        // Calling showLightBox function with passing clicked img src as argument
+        img.addEventListener("click", () => showLightbox(img.querySelector("img").src));
+    });
+
+    const showLightbox = (img) => {
+        // Showing lightbox and updating img source
+        lightbox.querySelector("img").src = img;
+
+        lightbox.classList.add("show");
+        document.body.style.overflow = "hidden";
+    }
+
+    closeImgBtn.addEventListener("click", () => {
+        // Hiding lightbox on close icon click
+        lightbox.classList.remove("show");
+        document.body.style.overflow = "auto";
+    });
+
+  </script>

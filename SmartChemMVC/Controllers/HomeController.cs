@@ -23,7 +23,7 @@ namespace SmartChemMVC.Controllers
         {
             this.httpClient = httpClient;
         }
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> Index()
         {
             //var apiClient = new ApiClient(new HttpClient());
