@@ -1,19 +1,61 @@
-﻿@*@model CompoundData
+﻿<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
 
-<h1>Compound Data</h1>
+    h1 {
+        text-align: center;
+        margin-bottom: 25px;
+    }
 
-@foreach (var property in typeof(CompoundData).GetProperties())
-{
-    <p><strong>@property.Name:</strong> @property.GetValue(Model)</p>
-}
+    form {
+        display: flex;
+        margin: 30px;
+        justify-content: center;
+        align-items: center;
+    }
 
+    label {
+        font-weight: bold;
+        margin-right: 10px;
+    }
 
-*@
+    input[type="text"] {
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 16px;
+    }
+
+    button[type="submit"] {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+    h2 {
+        margin-top: 30px;
+        font-size: 20px;
+    }
+
+    p {
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+</style>
 
 @model CompoundData
 
 <h1>Get Compound Data</h1>
-
+<p>An example for an input: H2O</p>
 <form method="get" action="@Url.Action("GetCompoundData", "Model")">
     <label for="compoundName">Compound Name:</label>
     <input type="text" id="compoundName" name="compoundName" />

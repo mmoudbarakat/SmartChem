@@ -1,13 +1,74 @@
-﻿@model RetrosynthesisRequest
+﻿<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+
+    h1 {
+        text-align: center;
+        margin-bottom: 25px;
+    }
+
+    form {
+        display: flex;
+        margin: 30px;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    label {
+        font-weight: bold;
+        margin-right: 10px;
+        padding: 10px;
+    }
+
+    input[type="text"],
+    input[type="number"] {
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 16px;
+    }
+
+    button[type="submit"] {
+        padding: 10px 20px 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+        margin-top: 20px;
+    }
+
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+    h2 {
+        margin-top: 30px;
+        font-size: 20px;
+    }
+
+    p {
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+</style>
 
 <h1>Post Retrosyntheses</h1>
-
+<p>An example for an input: H2O</p>
 <form method="post" action="@Url.Action("SubmitRetrosyntheses", "Model")">
-    <label for="compound">Compound:</label>
-    <input type="text" id="compound" name="compound" />
+    <div>
+        <label for="compound">Compound:</label>
+        <input type="text" id="compound" name="compound" />
 
-    <label for="maxPathsNum">Max Paths Number:</label>
-    <input type="number" id="maxPathsNum" name="maxPathsNum" />
-
-    <button type="submit">Submit</button>
+        <label for="maxPathsNum">Max Paths Number:</label>
+        <input type="number" id="maxPathsNum" name="maxPathsNum" />
+    </div>
+    
+    <div>
+        <button type="submit">Submit</button>
+    </div>
+    
 </form>

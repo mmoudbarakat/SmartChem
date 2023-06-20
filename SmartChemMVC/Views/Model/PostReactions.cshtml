@@ -1,15 +1,65 @@
-﻿@model ReactionsResultViewModel
+﻿<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
 
+    h1 {
+        text-align: center;
+        margin-bottom: 25px;
+    }
 
+    form {
+        display: flex;
+        margin: 30px;
+        justify-content: center;
+        align-items: center;
+    }
+
+    label {
+        font-weight: bold;
+        margin-right: 10px;
+    }
+
+    input[type="text"] {
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 16px;
+    }
+
+    button[type="submit"] {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+    h2 {
+        margin-top: 30px;
+        font-size: 20px;
+    }
+
+    p {
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+</style>
 
 <h1>Post Reactions</h1>
+<p>An example for an input: H2 . O2</p>
 <form method="post" action="@Url.Action("SubmitReactions", "Model")">
     <label for="precursors">Precursors:</label>
     <input type="text" id="precursors" name="precursors" />
-
     <button type="submit">Submit</button>
+    
 </form>
-
 
 
 
@@ -20,15 +70,4 @@
     <h1>Results Smiles: @Model.Results_Smiles</h1>
     <h1>Results Confidence: @Model.Confidence</h1>
     <img src="https://chemgeek.live/image/@Model.Img" />
-
-
-@*    @foreach (var property in typeof(ReactionsResultViewModel).GetProperties())
-    {
-        <p><strong>@property.Name:</strong> @property.GetValue(Model)</p>
-    }*@
 }
-
-
-
-
-

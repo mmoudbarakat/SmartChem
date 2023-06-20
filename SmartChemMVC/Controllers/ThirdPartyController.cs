@@ -43,7 +43,7 @@ namespace SmartChemMVC.Controllers
             }
             catch (WebException ex)
             {
-                // Handle any errors that occurred during the API request
+
                 ViewBag.Error = "An error occurred while accessing the API: " + ex.Message;
             }
 
@@ -71,7 +71,7 @@ namespace SmartChemMVC.Controllers
 
                     if (propertiesPod != null)
                     {
-                        // Get the plaintext content of the subpod.
+                        // Get the content of the subpod.
                         XmlNode propertiesSubpod = propertiesPod.SelectSingleNode("subpod");
                         string properties = propertiesSubpod.SelectSingleNode("plaintext")?.InnerText;
 
@@ -97,7 +97,7 @@ namespace SmartChemMVC.Controllers
                 int endIndex = solution.IndexOf("|") - 1;
                 string compoundName = solution.Substring(startIndex, endIndex - startIndex).Trim();
 
-                // Construct the compound image URL
+                // compound image URL
                 string compoundImageUrl = $"https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/{Uri.EscapeDataString(compoundName)}/PNG";
 
                 return compoundImageUrl;
@@ -107,7 +107,7 @@ namespace SmartChemMVC.Controllers
                 // Handle the exception
                 Console.WriteLine("An error occurred while constructing the compound image URL:");
                 Console.WriteLine(ex.Message);
-                return null; // Or any appropriate value indicating the error
+                return null;
             }
         }
 

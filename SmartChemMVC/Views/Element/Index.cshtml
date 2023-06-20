@@ -2,13 +2,13 @@
 
 
 <html>
-	    <h2>Get Element by ID</h2>
+	    <h2 class="ragab">Get Element by ID</h2>
 
     <div class="row justify-content-center">
     <form method="post" asp-action="Index">
         <div class="form-group">
             <label for="id1" >Select ID:</label>
-            <select class="form-control" id="id1" name="id1">
+            <select class="form-control" id="id1" style="width: 25vw;" name="id1">
           <option value="26">H - Hydrogen</option>
           <option value="27">He - Helium</option>
           <option value="28">Li - Lithium</option>
@@ -129,22 +129,11 @@
           <option value="143">Oganesson</option>
         </select>
         </div>
-    @*    <div class="form-group">
-                    <label for="id1">Enter ID:</label>
-                    <input type="text" class="form-control" id="id1" name="id" placeholder="Enter ID" />
-                
-                </div>*@
-
-    @*            <div class="form-group">
-                    <label for="id2">Enter ID:</label>
-                    <input type="text" class="form-control" id2="id2" name="id2" placeholder="Enter ID" />
-                
-                </div>*@
 
 
                 <div class="form-group">
         <label for="id2">Select ID:</label>
-        <select class="form-control" id="id2" name="id2">
+            <select class="form-control" id="id2" style="width: 25vw;" name="id2">
           <option value="26">H - Hydrogen</option>
           <option value="27">He - Helium</option>
           <option value="28">Li - Lithium</option>
@@ -267,7 +256,7 @@
       </div>
 
                 <div class="col-md-12">
-                <button type="submit" class="btn btn-primary">Get Element</button>
+                <button type="submit" class="btn btn-primary" style="padding: 10px";>Get Element</button>
             </div>
     </form>
     </div>
@@ -289,7 +278,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
+                        <tr style="color:white;">
                             <td>@Model.FirstElement.Name</td>
                             <td>@Model.FirstElement.AtomicNumber</td>
                             <td>@Model.FirstElement.ElementName</td>
@@ -347,24 +336,7 @@
         float? massSum = mass1 + mass2;
 
     <div class="mass-values"> Mass of both elements: <span class="total-mass"> @massSum </span> Grams  </div>
-    <style>
-        .mass-label {
-            font-weight: bold;
-        }
 
-        .mass-values {
-            margin-top: 5px;
-        }
-
-        .atomic-mass {
-            font-weight: bold;
-        }
-
-        .total-mass {
-            font-weight: bold;
-            color: blue;
-        }
-    </style>
 
 
 }
@@ -401,26 +373,28 @@
 			display: flex;
 		}
 
-		/* Center form horizontally */
+
 		.form-group {
 			margin-left: auto;
 			margin-right: auto;
 		}
 
-		/* Add space below form */
+
 		.form-group + button {
 			margin-top: 1rem;
 		}
 
-		/* Add space between form and table */
+
 		form + .table {
 			margin-top: 2rem;
 		}
 
-		/* Style table */
+
 		.table {
 			border-collapse: separate;
 			border-spacing: 0 0.5rem;
+            color:white;
+            font-size:larger;
 		}
 
 		.table th {
@@ -443,85 +417,10 @@
 		.table-striped tbody tr:nth-of-type(odd) {
 			background-color: rgba(0, 0, 0, 0.05);
 		}
+
+        .ragab{
+            display:flex
+            justify-content: flex-end;
+        }
 	</style>
 
-@*
-<style>
-   .chem-formula {
-       align-items: center;
-  font-family: Arial, sans-serif;
-  font-size: 1.5rem;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  border: 2px solid black;
-  padding: 1rem;
-  border-radius: 5px;
-}
-
-.chem-formula sub {
-  font-size: 0.8rem;
-  vertical-align: sub;
-  margin-left: 0.2rem;
-}
-
-.arrow {
-  font-size: 2rem;
-  margin: 0 1.5rem;
-}
-
-
-
-    .container{
-        display : flex;
-
-    }
-    /* Center form horizontally */
-.form-group {
-    margin-left: auto;
-    margin-right: auto;
-}
-
-/* Add space below form */
-.form-group + button {
-    margin-top: 1rem;
-}
-
-/* Add space between form and table */
-form + .table {
-    margin-top: 2rem;
-}
-
-/* Style table */
-.table {
-    border-collapse: separate;
-    border-spacing: 0 0.5rem;
-}
-
-.table th {
-    background-color: #007bff;
-    color: #fff;
-    font-weight: 500;
-    text-align: center;
-    vertical-align: middle;
-    padding: 0.75rem;
-    border-top: 2px solid #dee2e6;
-}
-
-.table td {
-    text-align: center;
-    vertical-align: middle;
-    padding: 0.75rem;
-    border-top: 1px solid #dee2e6;
-}
-
-.table-striped tbody tr:nth-of-type(odd) {
-    background-color: rgba(0, 0, 0, 0.05);
-}
-
-
-
-
-</style>
-           *@             

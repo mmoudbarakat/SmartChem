@@ -22,7 +22,7 @@ namespace SmartChemMVC.Controllers
         {
             if (string.IsNullOrEmpty(compoundName))
             {
-                // If the compoundName parameter is empty or null, return the view without making the API request
+                
                 return View();
             }
 
@@ -44,13 +44,11 @@ namespace SmartChemMVC.Controllers
                     // Deserialize the JSON response
                     var compoundData = JsonConvert.DeserializeObject<CompoundData>(jsonResponse);
 
-                    // Pass the compoundData to the view
+                    
                     return View(compoundData);
                 }
                 else
-                {
-                    // Handle the API request failure
-                    // For example, return an error view or display an error message
+                { 
                     return View("Error");
                 }
             }

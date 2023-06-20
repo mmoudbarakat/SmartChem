@@ -15,15 +15,8 @@ namespace SmartChem.Controllers
         {
             _context = context;
         }
-        //[HttpGet]
-        //public async Task<ActionResult<List<Element>>> GetElement()
-        //{
-        //    return Ok(await _context.Elements.ToListAsync());
-
-        //}
 
 
-        //[HttpGet("{id}")]
         [HttpGet("{id:int}")]
         public async Task<ActionResult<Element>> GetElement(int id)
         {

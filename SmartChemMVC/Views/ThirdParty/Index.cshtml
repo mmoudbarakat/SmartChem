@@ -1,63 +1,25 @@
-﻿@*@{
-    ViewData["Title"] = "Third Party API";
-}
-
-<h1>Third Party API</h1>
-
-<form method="post" asp-action="Index">
-    <div class="form-group">
-        <label for="element1">Element 1:</label>
-        <input type="text" class="form-control" id="element1" name="element1" required>
-    </div>
-    <div class="form-group">
-        <label for="element2">Element 2:</label>
-        <input type="text" class="form-control" id="element2" name="element2" required>
-    </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
-</form>
-
-@if (ViewBag.Error != null)
-{
-    <div class="alert alert-danger">
-        @ViewBag.Error
-    </div>
-}
-else if (ViewBag.Solution != null)
-{
-    <div class="alert alert-success">
-        @ViewBag.Solution
-    </div>
-
-    <img src="@ViewBag.CompoundImageUrl" alt="Compound Image" class="compound-image">
-}
-
-*@
-
-
-
-
-
-
-
-
-
-@{
+﻿@{
     ViewData["Title"] = "Third Party API";
 }
 
 <h1>Reactions</h1>
+<div>
+    <form method="post" asp-action="Index">
+        <div class="form-group">
+            <label for="element1">Element 1:</label>
+            <input type="text" style="width: 25vw;" class="form-control" id="element1" name="element1" required>
+        </div>
+        <div class="form-group">
+            <label for="element2">Element 2:</label>
+            <input type="text" style="width: 25vw;" class="form-control" id="element2" name="element2" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
 
-<form method="post" asp-action="Index">
-    <div class="form-group">
-        <label for="element1">Element 1:</label>
-        <input type="text" class="form-control" id="element1" name="element1" required>
-    </div>
-    <div class="form-group">
-        <label for="element2">Element 2:</label>
-        <input type="text" class="form-control" id="element2" name="element2" required>
-    </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
-</form>
+<div style="display: flex; justify-content: center; padding: 10px;">
+    <img src="@ViewBag.CompoundImageUrl" alt="Compound Image" class="compound-image"/>
+</div>
 
 @if (ViewBag.Error != null)
 {
@@ -94,7 +56,7 @@ else if (ViewBag.Solution != null)
         </table>
     </div>
 
-    <img src="@ViewBag.CompoundImageUrl" alt="Compound Image" class="compound-image">
+   
 }
 
 @functions {

@@ -63,8 +63,7 @@ namespace SmartChemMVC.Controllers
 
             // Deserialize JSON data into an Element object
             Element element1 = JsonConvert.DeserializeObject<Element>(responseContent);
-            //Element2 element2 = JsonConvert.DeserializeObject<Element2>(responseContent);
-            //MyViewModel viewModel = JsonConvert.DeserializeObject<MyViewModel>(responseContent);
+
 
 
             return View(element1);
@@ -147,7 +146,7 @@ namespace SmartChemMVC.Controllers
             }
             else
             {
-                // Handle error response
+                
                 return View("Error");
             }
 
