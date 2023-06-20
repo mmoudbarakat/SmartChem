@@ -2,56 +2,106 @@
 @model decimal
 
 <h1 class="text-center">Unit Converter</h1>
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
 
-<form method="post" action="/Home/Convert">
-    <div class="vk_c card obcontainer card-section bg-transparent d-flex align-items-center m-5 p-5">
-        <div class="sc5Lhd">
-            <select id="categorySelect" name="category" class="rYVYn LNn04b gsrt" onchange="updateUnits()">
-                <option value="Area">Area</option>
-                <option value="Data Transfer Rate">Data Transfer Rate</option>
-                <option value="Digital Storage">Digital Storage</option>
-                <option value="Energy">Energy</option>
-                <option value="Frequency">Frequency</option>
-                <option value="Fuel Economy">Fuel Economy</option>
-                <option value="Length" selected>Length</option>
-                <option value="Mass">Mass</option>
-                <option value="Plane Angle">Plane Angle</option>
-                <option value="Pressure">Pressure</option>
-                <option value="Speed">Speed</option>
-                <option value="Temperature">Temperature</option>
-                <option value="Time">Time</option>
-                <option value="Volume">Volume</option>
-                <option value="Momentum">Momentum</option>
-            </select>
-        </div>
-        <div class="rpnBye" id="inputDiv">
-            <input type="number" id="inputValue" name="quantity" step="any" value="1" class="vXQmIe gsrt" onchange="updateResult()">
-            <select id="inputUnitSelect" name="fromUnit" class="OR9QXc LNn04b gsrt" onchange="updateResult()">
-            </select>
-        </div>
-        <div class="jCkZnd">=</div>
-        <div class="rpnBye" id="outputDiv">
-            <input type="text" id="outputValue" readonly class="vXQmIe gsrt">
-            <select id="outputUnitSelect" name="toUnit" class="OR9QXc LNn04b gsrt" onchange="updateResult()">
-            </select>
-        </div>
-        <div class="dtp2jf">
-            <table>
-                <tbody>
-                    <tr valign="top">
-                        <td>
-                            <div class="NIzGle" id="formulaDiv">Formula</div>
-                        </td>
-                        <td>
-                            <div class="bjhkR" id="formulaValueDiv"></div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
+        .input-section {
+            margin: 10px;
+            display: flex;
+            align-items: center;
+        }
 
-</form>
+        input[type="number"],
+        input[type="text"],
+        select {
+            padding: 8px;
+            font-size: 16px;
+            width: 150px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .equals-sign {
+            font-size: 20px;
+            margin: 0 10px;
+        }
+
+        .formula-section {
+            margin-top: 20px;
+            align-self: flex-end;
+        }
+
+        .formula-label {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <form method="post" action="/Home/Convert">
+        <div class="container">
+            <div class="input-section">
+                <select id="categorySelect" name="category" onchange="updateUnits()">
+                    <option value="Area">Area</option>
+                    <option value="Data Transfer Rate">Data Transfer Rate</option>
+                    <option value="Digital Storage">Digital Storage</option>
+                    <option value="Energy">Energy</option>
+                    <option value="Frequency">Frequency</option>
+                    <option value="Fuel Economy">Fuel Economy</option>
+                    <option value="Length" selected>Length</option>
+                    <option value="Mass">Mass</option>
+                    <option value="Plane Angle">Plane Angle</option>
+                    <option value="Pressure">Pressure</option>
+                    <option value="Speed">Speed</option>
+                    <option value="Temperature">Temperature</option>
+                    <option value="Time">Time</option>
+                    <option value="Volume">Volume</option>
+                    <option value="Momentum">Momentum</option>
+                </select>
+            </div>
+            <div class="input-section" id="inputDiv">
+                <input type="number" id="inputValue" name="quantity" step="any" value="1" onchange="updateResult()">
+                <select id="inputUnitSelect" name="fromUnit" onchange="updateResult()">
+                </select>
+            </div>
+            <div class="input-section">
+                <div class="equals-sign">=</div>
+            </div>
+            <div class="input-section" id="outputDiv">
+                <input type="text" id="outputValue" readonly>
+                <select id="outputUnitSelect" name="toUnit" onchange="updateResult()">
+                </select>
+            </div>
+            <div class="formula-section">
+                <table>
+                    <tbody>
+                        <tr valign="top">
+                            <td>
+                                <div class="formula-label" id="formulaDiv">Formula</div>
+                            </td>
+                            <td>
+                                <div class="formula-value" id="formulaValueDiv"></div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </form>
+</body>
+</html>
+
+
+
+
 
 @section scripts {
     <script>
